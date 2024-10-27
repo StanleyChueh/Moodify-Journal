@@ -1,3 +1,4 @@
+// Other imports remain the same
 import React, { useState, useEffect, useRef } from 'react';
 import { FaKeyboard, FaMicrophone, FaPenFancy } from 'react-icons/fa';
 import './App.css';
@@ -23,7 +24,6 @@ const imageCounts = {
   "Happiness": 11
 };
 
-// Function to get a random image for the current mood
 function getRandomImageForMood(moodValue) {
   let moodIndex = Math.floor((moodValue / 100) * moodLabels.length);
   moodIndex = moodValue === 100 ? moodLabels.length - 1 : Math.min(moodIndex, moodLabels.length - 1);
@@ -36,9 +36,8 @@ function getRandomImageForMood(moodValue) {
   return `${process.env.PUBLIC_URL}/${directory}/image${randomIndex}.jpg`;
 }
 
-// Extract YouTube video ID from the URL
 function getYouTubeVideoId(url) {
-  const regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#\&\?]*).*/;
+  const regExp = /^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
   return (match && match[1].length === 11) ? match[1] : null;
 }
@@ -48,91 +47,19 @@ function App() {
   const [diaryEntries, setDiaryEntries] = useState(initializeDiaryEntries(dateList));
   const [selectedDate, setSelectedDate] = useState(dateList[0]);
   const [prompt, setPrompt] = useState(diaryEntries[dateList[0]].description);
+  const [speechResult, setSpeechResult] = useState('');
   const [mood, setMood] = useState(25);
   const [imageUrl, setImageUrl] = useState(diaryEntries[dateList[0]].imageUrl);
-  const [moodAnalysis, setMoodAnalysis] = useState(initializeMoodAnalysis());
   const [activeInputMode, setActiveInputMode] = useState('typing');
   const [isDrawingOpen, setIsDrawingOpen] = useState(false);
+  const [isSpeechOpen, setIsSpeechOpen] = useState(false);
   const [selectedMusic, setSelectedMusic] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [lastModalShowDate, setLastModalShowDate] = useState(null); // Track when the modal was last shown
+  const [isModalOpen, setIsModalOpen] = useState(false); // Re-added this state
+  const [drawingDataUrl, setDrawingDataUrl] = useState(null);
   const recognitionRef = useRef(null);
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
 
-  // Generate date list for the past 30 days
-  function generateDateList() {
-    const today = new Date();
-    const dateList = [];
-    for (let i = 0; i <= 30; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() - i);
-      const dateString = date.toISOString().split('T')[0];
-      dateList.push(dateString);
-    }
-    return dateList;
-  }
-
-  // Initialize diary entries with default values
-  function initializeDiaryEntries(dateList) {
-    return dateList.reduce((entries, date) => {
-      entries[date] = { description: '', mood: 25, imageUrl: null };
-      return entries;
-    }, {});
-  }
-
-  // Initialize mood analysis with zero counts
-  function initializeMoodAnalysis() {
-    return moodLabels.reduce((acc, label) => {
-      acc[label] = 0;
-      return acc;
-    }, {});
-  }
-
-  // Update mood analysis based on the past 14 days
-  const updateMoodAnalysis = () => {
-    const last14Days = dateList.slice(0, 14);
-    const newMoodAnalysis = initializeMoodAnalysis();
-
-    let sadnessCount = 0;
-    let fearCount = 0;
-
-    last14Days.forEach((date) => {
-      const entry = diaryEntries[date];
-      if (entry && entry.mood !== null) {
-        const moodIndex = Math.floor(entry.mood / (100 / moodLabels.length));
-        const moodLabel = moodLabels[moodIndex];
-        if (moodLabel) {
-          newMoodAnalysis[moodLabel] += 1;
-
-          // Count the number of "Sadness" and "Fear" entries
-          if (moodLabel === "Sadness") {
-            sadnessCount += 1;
-          } else if (moodLabel === "Fear") {
-            fearCount += 1;
-          }
-        }
-      }
-    });
-
-    setMoodAnalysis(newMoodAnalysis);
-
-    // Check if modal should be shown again (only if the last modal show was more than 7 days ago)
-    const today = new Date();
-    const daysSinceLastModal = lastModalShowDate ? Math.floor((today - lastModalShowDate) / (1000 * 60 * 60 * 24)) : 8;
-
-    if ((sadnessCount > 7 || fearCount > 7) && daysSinceLastModal >= 7) {
-      setIsModalOpen(true);
-      setLastModalShowDate(new Date()); // Update last modal show date
-    }
-  };
-
-  // Call updateMoodAnalysis whenever diaryEntries change
-  useEffect(() => {
-    updateMoodAnalysis();
-  }, [diaryEntries]);
-
-  // Update YouTube music suggestion based on the mood
   useEffect(() => {
     const musicSuggestions = [
       { moodRange: [0, 16], title: "Angry Music", playlistUrl: "https://www.youtube.com/watch?v=r8OipmKFDeM" },
@@ -149,7 +76,25 @@ function App() {
     setSelectedMusic(currentMusic);
   }, [mood]);
 
-  // Handle switching between dates
+  function generateDateList() {
+    const today = new Date();
+    const dateList = [];
+    for (let i = 0; i <= 30; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      const dateString = date.toISOString().split('T')[0];
+      dateList.push(dateString);
+    }
+    return dateList;
+  }
+
+  function initializeDiaryEntries(dateList) {
+    return dateList.reduce((entries, date) => {
+      entries[date] = { description: '', mood: 25, imageUrl: null };
+      return entries;
+    }, {});
+  }
+
   const handleDateClick = (date) => {
     setDiaryEntries((prevEntries) => ({
       ...prevEntries,
@@ -166,7 +111,6 @@ function App() {
     setImageUrl(diaryEntries[date]?.imageUrl || null);
   };
 
-  // Handle saving the current entry
   const handleEnter = () => {
     const image = getRandomImageForMood(mood);
     setImageUrl(image);
@@ -177,26 +121,34 @@ function App() {
         description: prompt,
         mood: mood,
         imageUrl: image,
+        drawing: drawingDataUrl,
+        speech: speechResult,
       },
     }));
 
     alert('Entry saved successfully!');
   };
 
-  // Handle input mode change
   const handleInputModeChange = (mode) => {
-    setActiveInputMode(mode);
-    if (mode === 'speech') {
-      startSpeechRecognition();
-    } else {
-      stopSpeechRecognition();
+    if (activeInputMode !== mode) {
+      clearResults();
     }
-    if (mode === 'draw') {
+
+    setActiveInputMode(mode);
+
+    if (mode === 'speech') {
+      setIsSpeechOpen(true);
+    } else if (mode === 'draw') {
       setIsDrawingOpen(true);
     }
   };
 
-  // Speech-to-text functionality
+  const clearResults = () => {
+    setPrompt('');
+    setSpeechResult('');
+    setDrawingDataUrl(null);
+  };
+
   const startSpeechRecognition = () => {
     if (!('webkitSpeechRecognition' in window)) {
       alert('Speech recognition is not supported in this browser.');
@@ -205,43 +157,56 @@ function App() {
 
     const recognition = new window.webkitSpeechRecognition();
     recognition.lang = 'en-US';
-    recognition.interimResults = false;
+    recognition.interimResults = true;
+    recognition.continuous = true;
+    recognitionRef.current = recognition;
 
     recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setPrompt((prevPrompt) => prevPrompt + ' ' + transcript);
+      const transcript = event.results[event.results.length - 1][0].transcript;
+      setSpeechResult((prevResult) => prevResult + ' ' + transcript);
     };
 
     recognition.onerror = (event) => {
       console.error('Speech recognition error:', event.error);
     };
 
-    recognition.onend = () => {
-      console.log('Speech recognition ended.');
-    };
-
     recognition.start();
-    recognitionRef.current = recognition;
   };
 
   const stopSpeechRecognition = () => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
+    setIsSpeechOpen(false);
   };
 
-  // Handle drawing functionality
   const handleCanvasMouseDown = (e) => {
-    const ctx = canvasRef.current.getContext('2d');
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
     ctx.beginPath();
-    ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+    ctx.moveTo(
+      (e.clientX - rect.left) * scaleX,
+      (e.clientY - rect.top) * scaleY
+    );
     isDrawing.current = true;
   };
 
   const handleCanvasMouseMove = (e) => {
     if (!isDrawing.current) return;
-    const ctx = canvasRef.current.getContext('2d');
-    ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    ctx.lineTo(
+      (e.clientX - rect.left) * scaleX,
+      (e.clientY - rect.top) * scaleY
+    );
     ctx.stroke();
   };
 
@@ -249,9 +214,15 @@ function App() {
     isDrawing.current = false;
   };
 
+  const saveDrawing = () => {
+    const canvas = canvasRef.current;
+    const dataUrl = canvas.toDataURL();
+    setDrawingDataUrl(dataUrl);
+    setIsDrawingOpen(false);
+  };
+
   return (
     <div className="app-layout">
-      {/* Sidebar for Diary Entries */}
       <div className="sidebar">
         <h2 className="sidebar-title">Diary AI</h2>
         <ul className="diary-list">
@@ -267,36 +238,50 @@ function App() {
         </ul>
       </div>
 
-      {/* Main Content Area */}
       <div className="main-content">
         <h1 className="main-title">{selectedDate}'s Mood</h1>
         <div className="input-icons">
-          <FaKeyboard 
-            className={`input-icon ${activeInputMode === 'typing' ? 'active' : ''}`} 
-            title="Type" 
-            onClick={() => handleInputModeChange('typing')} 
+          <FaKeyboard
+            className={`input-icon ${activeInputMode === 'typing' ? 'active' : ''}`}
+            title="Type"
+            onClick={() => handleInputModeChange('typing')}
           />
-          <FaMicrophone 
-            className={`input-icon ${activeInputMode === 'speech' ? 'active' : ''}`} 
-            title="Voice to Text" 
-            onClick={() => handleInputModeChange('speech')} 
+          <FaMicrophone
+            className={`input-icon ${activeInputMode === 'speech' ? 'active' : ''}`}
+            title="Voice to Text"
+            onClick={() => handleInputModeChange('speech')}
           />
-          <FaPenFancy 
-            className={`input-icon ${activeInputMode === 'draw' ? 'active' : ''}`} 
-            title="Handwriting" 
-            onClick={() => handleInputModeChange('draw')} 
+          <FaPenFancy
+            className={`input-icon ${activeInputMode === 'draw' ? 'active' : ''}`}
+            title="Draw"
+            onClick={() => handleInputModeChange('draw')}
           />
         </div>
-        <textarea
-          className="description-input"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Write your description here..."
-        />
-        <button 
-          className="generate-button"
-          onClick={handleEnter}
-        >
+
+        {activeInputMode === 'typing' && (
+          <textarea
+            className="description-input"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder="Write your description here..."
+          />
+        )}
+
+        {activeInputMode === 'speech' && (
+          <div className="speech-result">
+            <h3>Speech-to-Text Result</h3>
+            <p>{speechResult}</p>
+          </div>
+        )}
+
+        {activeInputMode === 'draw' && drawingDataUrl && (
+          <div className="drawing-result">
+            <h3>Drawing Result</h3>
+            <img src={drawingDataUrl} alt="Drawing" className="drawing-preview" />
+          </div>
+        )}
+
+        <button className="generate-button" onClick={handleEnter}>
           Enter
         </button>
 
@@ -324,17 +309,13 @@ function App() {
             className="mood-slider"
             onChange={(e) => setMood(Number(e.target.value))}
           />
+          <div className="mood-value">Mood: {mood}</div>
         </div>
 
-        {/* YouTube Music Suggestions */}
         {selectedMusic && (
           <div className="music-suggestion">
             <h3>Suggested Playlist: {selectedMusic.title}</h3>
-            <a
-              href={selectedMusic.playlistUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={selectedMusic.playlistUrl} target="_blank" rel="noopener noreferrer">
               <img
                 src={`https://img.youtube.com/vi/${getYouTubeVideoId(selectedMusic.playlistUrl)}/hqdefault.jpg`}
                 alt={`${selectedMusic.title} playlist`}
@@ -344,19 +325,6 @@ function App() {
           </div>
         )}
 
-        {/* Mood Analysis Box */}
-        <div className="mood-analysis">
-          <h3>Past 14 Days Mood Analysis</h3>
-          <ul>
-            {Object.keys(moodAnalysis).map((mood) => (
-              <li key={mood}>
-                {mood}: {moodAnalysis[mood]}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Alert Modal for Help */}
         <AlertModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -364,23 +332,38 @@ function App() {
           link="https://www.google.com/search?q=%E5%BF%83%E7%90%86%E9%86%AB%E7%94%9F"
         />
 
-        {/* Drawing Overlay */}
-        {isDrawingOpen && (
-          <div className="drawing-overlay">
-            <canvas
-              ref={canvasRef}
-              className="drawing-canvas"
-              onMouseDown={handleCanvasMouseDown}
-              onMouseMove={handleCanvasMouseMove}
-              onMouseUp={handleCanvasMouseUp}
-            />
-            <button className="close-drawing" onClick={() => setIsDrawingOpen(false)}>Done</button>
+        {isSpeechOpen && (
+          <div className="popup-overlay">
+            <div className="popup-content">
+              <h2>Speak now...</h2>
+              <button onClick={startSpeechRecognition}>Start</button>
+              <button onClick={stopSpeechRecognition}>Done</button>
+            </div>
           </div>
         )}
+
+        {isDrawingOpen && (
+          <div className="popup-overlay">
+            <div className="popup-content">
+              <canvas
+                ref={canvasRef}
+                className="drawing-canvas"
+                width={550}
+                height={300}
+                onMouseDown={handleCanvasMouseDown}
+                onMouseMove={handleCanvasMouseMove}
+                onMouseUp={handleCanvasMouseUp}
+              />
+              <button onClick={saveDrawing}>Done</button>
+            </div>
+          </div>
+        )}
+
+        {/* Mood Count Display at the bottom right */}
+        <div className="mood-count-display">Mood: {mood}</div>
       </div>
     </div>
   );
 }
 
 export default App;
-

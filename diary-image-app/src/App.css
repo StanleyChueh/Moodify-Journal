@@ -240,10 +240,23 @@
     cursor: pointer;
 }
 
+/* Mood Count Display Styling */
+.mood-count-display {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    z-index: 1000;
+}
+
 /* Mood Analysis Box Styling */
 .mood-analysis {
     position: fixed;
-    bottom: 20px;
+    bottom: 60px;
     right: 20px;
     width: 200px;
     padding: 10px;
@@ -288,9 +301,15 @@
         overflow-x: auto; /* Allow horizontal scroll on small screens */
     }
 
+    .mood-count-display {
+        font-size: 14px;
+        bottom: 10px;
+        right: 5px;
+    }
+
     .mood-analysis {
         width: 150px;
         right: 10px;
+        bottom: 50px;
     }
 }
-
