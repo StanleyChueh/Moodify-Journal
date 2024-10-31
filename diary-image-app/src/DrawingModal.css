@@ -1,0 +1,30 @@
+.drawing-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.drawing-modal {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.drawing-canvas {
+  border: 1px solid #000; /* Add a border for visibility */
+  cursor: crosshair; /* Show crosshair when drawing */
+  width: 500px; /* Ensure width matches the component's width */
+  height: 300px; /* Ensure height matches the component's height */
+}
+
+
+.drawing-modal-buttons button {
+  margin: 5px;
+}
