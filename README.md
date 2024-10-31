@@ -14,7 +14,7 @@ Diary AI is a web application that encourages diary writing by converting daily 
 ## Screenshots
 
 ![image](https://github.com/user-attachments/assets/09cd3ae1-50dd-45a4-8436-c8811951d356)
-
+DEMO:https://stanleychueh.github.io/Moodify-Journal/
 ## Installation
 
 1. Clone the repository:
