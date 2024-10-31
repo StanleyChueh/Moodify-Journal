@@ -6,6 +6,7 @@ import DrawingModal from './DrawingModal';
 
 // Constants
 const moodLabels = ["Anger", "Neutral", "Fear", "Sadness", "Surprise", "Happiness"];
+const moodEmojis = ["😠", "😐", "😨", "😢", "😲", "😊"];
 const imageDirectories = {
   "Anger": "images/Anger",
   "Neutral": "images/Neutral",
@@ -77,7 +78,7 @@ function App() {
   const [diaryEntries, setDiaryEntries] = useState(initializeDiaryEntries(dateList));
   const [selectedDate, setSelectedDate] = useState(dateList[0]);
   const [prompt, setPrompt] = useState(diaryEntries[dateList[0]].description);
-  const [speechResult, setSpeechResult] = useState('');
+  const [speechResult, setSpeechResult] = useState(diaryEntries[dateList[0]].speechResult);
   const [mood, setMood] = useState(25);
   const [imageUrl, setImageUrl] = useState(diaryEntries[dateList[0]].imageUrl);
   const [activeInputMode, setActiveInputMode] = useState('typing');
@@ -88,11 +89,11 @@ function App() {
   const [moodAnalysis, setMoodAnalysis] = useState(initializeMoodAnalysis());
   const [lastModalShowDate, setLastModalShowDate] = useState(null);
   const [isDrawingModalOpen, setIsDrawingModalOpen] = useState(false);
-  const [savedDrawing, setSavedDrawing] = useState(null); // Add this line to manage saved drawings
-
+  const [savedDrawing, setSavedDrawing] = useState(diaryEntries[selectedDate].drawing || null);
   const recognitionRef = useRef(null);
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
+  const [isRecording, setIsRecording] = useState(false); 
 
   // Wrap updateMoodAnalysis in useCallback
   const updateMoodAnalysis = useCallback(() => {
@@ -152,13 +153,24 @@ function App() {
     setSelectedMusic(currentMusic);
   }, [mood]);
 
+  const handleClear = () => {
+    if (activeInputMode === 'typing') {
+      setPrompt('');
+    } else if (activeInputMode === 'speech') {
+      setSpeechResult('');
+    }
+  };
+
   const handleDateClick = (date) => {
     setDiaryEntries((prevEntries) => ({
       ...prevEntries,
       [selectedDate]: {
+        ...prevEntries[selectedDate],
         description: prompt,
         mood: mood,
         imageUrl: imageUrl,
+        drawing: savedDrawing,
+        speechResult: speechResult,
       },
     }));
 
@@ -166,9 +178,27 @@ function App() {
     setPrompt(diaryEntries[date]?.description || '');
     setMood(diaryEntries[date]?.mood || 25);
     setImageUrl(diaryEntries[date]?.imageUrl || null);
+    //setSavedDrawing(diaryEntries[date]?.drawing || null);
+    setSpeechResult(diaryEntries[date]?.speechResult || ''); 
   };
 
   const handleEnter = () => {
+    if (activeInputMode === 'speech') {
+      if (isRecording) {
+        stopSpeechRecognition();
+        setDiaryEntries((prevEntries) => ({
+          ...prevEntries,
+          [selectedDate]: {
+            ...prevEntries[selectedDate],
+            speechResult: speechResult, // Save speech result for the selected date
+          },
+        }));
+        alert('Recording stopped and entry saved successfully!');
+      } else {
+        startSpeechRecognition();
+        alert('Recording started...');
+      }
+    } else{
     const image = getRandomImageForMood(mood);
     setImageUrl(image);
 
@@ -178,15 +208,17 @@ function App() {
         description: prompt,
         mood: mood,
         imageUrl: image,
+        speechResult: speechResult,
       },
     }));
-
     alert('Entry saved successfully!');
+    }
   };
 
   const handleInputModeChange = (mode) => {
-    if (activeInputMode !== mode) {
-      clearResults();
+    setActiveInputMode(mode);
+    if (isRecording) {
+      stopSpeechRecognition(); 
     }
 
     setActiveInputMode(mode);
@@ -233,11 +265,13 @@ function App() {
     };
 
     recognition.start();
+    setIsRecording(true);
   };
 
   const stopSpeechRecognition = () => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
+      setIsRecording(false);
     }
   };
 
@@ -283,23 +317,31 @@ function App() {
     const canvas = canvasRef.current;
     if (canvas) {
       const dataUrl = canvas.toDataURL(); // Convert canvas to base64 image data
-      setSavedDrawing(dataUrl); // Store the image data
+      setSavedDrawing(dataUrl); // Store the image data for the selected date
+      setDiaryEntries((prevEntries) => ({
+        ...prevEntries,
+        [selectedDate]: {
+          ...prevEntries[selectedDate],
+          drawing: dataUrl,
+        },
+      }));
       alert('Drawing saved successfully!');
     }
     setIsDrawingOpen(false); // Close the drawing modal after saving
   };
 
   const handleReimagine = () => {
-    if (!savedDrawing) {
-      alert('No saved drawing to re-imagine.');
-      return;
-    }
-
-    // Set the saved drawing as the image URL
-    setImageUrl(savedDrawing);
-    alert('Image re-imagined based on your drawing!');
+    setSavedDrawing(null); // Clear the saved drawing for re-imagining
+    setDiaryEntries((prevEntries) => ({
+      ...prevEntries,
+      [selectedDate]: {
+        ...prevEntries[selectedDate],
+        drawing: null,
+      },
+    }));
+    alert('The drawing has been cleared for re-imagining!');
   };
-
+  
   return (
     <div className="app-layout">
       <div className="sidebar">
@@ -355,11 +397,16 @@ function App() {
             <p>{speechResult}</p>
           </div>
         )}
+        <div className="button-container">
+          <button className="button enter-button" onClick={handleEnter}>
+            Enter
+          </button>
 
-        <button className="generate-button" onClick={handleEnter}>
-          Enter
-        </button>
-
+          <button className="button clear-button" onClick={handleClear}>
+              Clear
+          </button>
+        </div>
+        
         <div className="image-display">
           {imageUrl ? (
             <img src={imageUrl} alt="Mood" className="generated-image" />
@@ -369,10 +416,10 @@ function App() {
         </div>
 
         <div className="mood-slider-container">
-          <div className="mood-labels">
-            {moodLabels.map((label) => (
-              <span key={label} className="mood-label">
-                {label}
+          <div className="mood-emojis">
+            {moodEmojis.map((emoji, index) => (
+              <span key={index} className="mood-emoji">
+                {emoji}
               </span>
             ))}
           </div>
@@ -384,12 +431,11 @@ function App() {
             className="mood-slider"
             onChange={(e) => setMood(Number(e.target.value))}
           />
-          <div className="mood-value">Mood: {mood}</div>
         </div>
 
         {selectedMusic && (
           <div className="music-suggestion">
-            <h3>Suggested Playlist: {selectedMusic.title}</h3>
+            <h3>Suggested Playlist:</h3>
             <a href={selectedMusic.playlistUrl} target="_blank" rel="noopener noreferrer">
               <img
                 src={`https://img.youtube.com/vi/${getYouTubeVideoId(selectedMusic.playlistUrl)}/hqdefault.jpg`}
@@ -403,9 +449,9 @@ function App() {
         <div className="mood-analysis">
           <h3>Past 14 Days Mood Analysis</h3>
           <ul>
-            {Object.keys(moodAnalysis).map((mood) => (
+            {Object.keys(moodAnalysis).map((mood, index) => (
               <li key={mood}>
-                {mood}: {moodAnalysis[mood]}
+                {moodLabels[index]} {moodEmojis[index]}: {moodAnalysis[mood]}
               </li>
             ))}
           </ul>
@@ -417,15 +463,6 @@ function App() {
           message="It seems that you've been feeling fear or sadness for more than 7 days in the past two weeks. Consider talking to a psychiatrist."
           link="https://www.google.com/search?q=%E5%BF%83%E7%90%86%E9%86%AB%E7%94%9F"
         />
-
-        {isSpeechOpen && (
-          <div className="popup-overlay">
-            <div className="popup-content">
-              <h2>Speak now...</h2>
-              <button onClick={stopSpeechRecognition}>Stop</button>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Add DrawingModal here */}
@@ -436,11 +473,9 @@ function App() {
         handleCanvasMouseDown={handleCanvasMouseDown}
         handleCanvasMouseMove={handleCanvasMouseMove}
         handleCanvasMouseUp={handleCanvasMouseUp}
-        saveDrawing={() => {
-          saveDrawing();
-          setIsDrawingModalOpen(false);
-        }}
+        saveDrawing={saveDrawing}
         reimagineDrawing={handleReimagine}
+        savedDrawing={savedDrawing} // Pass the saved drawing to the modal
       />
     </div>
   );

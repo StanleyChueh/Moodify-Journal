@@ -150,21 +150,41 @@
     resize: none;
 }
 
-.generate-button {
+.button-container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .button {
     padding: 10px 20px;
-    margin-bottom: 20px;
     font-size: 1rem;
-    background-color: #3498db;
+    width: 100px; /* Fixed width */
+    height: 40px; /* Fixed height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #fff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s;
-}
-
-.generate-button:hover {
+  }
+  
+  .enter-button {
+    background-color: #3498db;
+  }
+  
+  .enter-button:hover {
     background-color: #2980b9;
-}
+  }
+  
+  .clear-button {
+    background-color: #e74c3c;
+  }
+  
+  .clear-button:hover {
+    background-color: #c0392b;
+  }
 
 /* Image Display Styling */
 .image-display {
@@ -200,6 +220,19 @@
     margin-top: 20px;
 }
 
+.mood-emojis {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  
+  .mood-emoji {
+    font-size: 1.5rem;
+    text-align: center; /* Center align for each emoji */
+  }
+  
+/*
 .mood-labels {
     display: flex;
     justify-content: space-between;
@@ -212,7 +245,7 @@
     color: #777;
     flex: 1;
 }
-
+*/
 .mood-slider {
     width: 100%;
     -webkit-appearance: none;
