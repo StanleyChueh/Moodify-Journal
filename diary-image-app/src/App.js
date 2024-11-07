@@ -3,6 +3,7 @@ import { FaKeyboard, FaMicrophone, FaPenFancy } from 'react-icons/fa';
 import './App.css';
 import AlertModal from './AlertModal';
 import DrawingModal from './DrawingModal';
+import ReviewMemoriesModal from './ReviewMemoriesModal';
 
 // Constants
 const moodLabels = ["Anger", "Neutral", "Fear", "Sadness", "Surprise", "Happiness"];
@@ -96,13 +97,65 @@ function App() {
   const [isRecording, setIsRecording] = useState(false); 
   const [selectedLanguage, setSelectedLanguage] = useState('en-US');
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
+  const [happyMemories, setHappyMemories] = useState([]);
+  const [isMemoryModalOpen, setIsMemoryModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [happyDays, setHappyDays] = useState([]);
 
+  const checkForGoodMemories = useCallback(() => {
+    const last14Days = dateList.slice(0, 14);
+    const foundHappyDays = last14Days.filter((date) => {
+      const entry = diaryEntries[date];
+      return entry && entry.mood >= 85; // Check for happiness range
+    });
+    setHappyDays(foundHappyDays);
+  }, [dateList, diaryEntries]);
+  
+  const handleMoodChange = (newMood) => {
+    setMood(newMood);
+  
+    // Check if the newMood corresponds to "fear" (34-50) or "sadness" (51-67)
+    if ((newMood >= 34 && newMood <= 50) || (newMood >= 51 && newMood <= 67)) {
+      // Check for past happy memories when selecting fear or sadness
+      const last14Days = dateList.slice(0, 14);
+      const foundHappyDays = last14Days.filter((date) => {
+        const entry = diaryEntries[date];
+        return entry && entry.mood >= 85; // Check if the mood is "happy"
+      });
+  
+      if (foundHappyDays.length > 0) {
+        setHappyDays(foundHappyDays); // Update state with happy days
+        setIsReviewModalOpen(true); // Open the review modal
+      } else {
+        setIsReviewModalOpen(false); // Close the modal if no happy days are found
+      }
+    } else {
+      setIsReviewModalOpen(false); // Ensure the modal is closed for other mood selections
+    }
+  };  
+  
   const handleLanguageSelect = (languageCode) => {
     setSelectedLanguage(languageCode);
     setIsLanguageModalOpen(false); // Close modal
     startSpeechRecognition(languageCode); // Start speech-to-text with the selected language
   };
 
+  const handleOpenReviewModal = () => {
+    checkForGoodMemories();
+    setIsReviewModalOpen(true);
+  };
+
+  const handleSelectDate = (date) => {
+    setSelectedDate(date);
+    setIsReviewModalOpen(false);
+  };
+
+  useEffect(() => {
+    if ((mood >= 34 && mood <= 50) || (mood >= 51 && mood <= 67)) {
+      handleReviewMemories();
+    }
+  }, [mood]);
+  
   // Wrap updateMoodAnalysis in useCallback
   const updateMoodAnalysis = useCallback(() => {
     const last14Days = dateList.slice(0, 14);
@@ -232,11 +285,11 @@ function App() {
     setActiveInputMode(mode);
 
     if (mode === 'speech') {
-      setIsSpeechOpen(true);
+      //setIsSpeechOpen(true);
       startSpeechRecognition();
     } else {
       stopSpeechRecognition();
-      setIsSpeechOpen(false);
+      //setIsSpeechOpen(false);
     }
 
     if (mode === 'draw') {
@@ -349,7 +402,7 @@ function App() {
       }));
       alert('Drawing saved successfully!');
     }
-    setIsDrawingOpen(false); // Close the drawing modal after saving
+    //setIsDrawingOpen(false); // Close the drawing modal after saving
   };
 
   const handleReimagine = () => {
@@ -372,6 +425,24 @@ function App() {
     alert('The drawing has been cleared for re-imagining!');
   };
   
+  const handleReviewMemories = () => {
+    const last14Days = dateList.slice(0, 14);
+    const happyDays = last14Days.filter(date => {
+      const entry = diaryEntries[date];
+      return entry && entry.mood >= 85; // Assuming 85-100 is happiness
+    });
+
+    if (happyDays.length > 0) {
+      setHappyMemories(happyDays);
+      setIsMemoryModalOpen(true);
+    }
+  };
+
+  useEffect(() => {
+    if (mood < 51) { // Assuming 0-50 is sadness or fear
+      handleReviewMemories();
+    }
+  }, [mood]);
   
   return (
     <div className="app-layout">
@@ -468,7 +539,7 @@ function App() {
             max="100"
             value={mood}
             className="mood-slider"
-            onChange={(e) => setMood(Number(e.target.value))}
+            onChange={(e) => handleMoodChange(Number(e.target.value))}
           />
         </div>
 
@@ -516,7 +587,17 @@ function App() {
         reimagineDrawing={handleReimagine}
         savedDrawing={savedDrawing} // Pass the saved drawing to the modal
       />
+
+      {isReviewModalOpen && (
+        <ReviewMemoriesModal
+          isOpen={isReviewModalOpen}
+          onClose={() => setIsReviewModalOpen(false)}
+          happyDays={happyDays}
+          onSelectDate={handleSelectDate}
+        />
+      )}
     </div>
+
   );
 }
 
