@@ -28,3 +28,15 @@
 .drawing-modal-buttons button {
   margin: 5px;
 }
+
+.color-palette {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.color-palette button {
+  border-radius: 50%;
+  outline: none;
+}
+

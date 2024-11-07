@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function DrawingModal({
   isOpen,
@@ -11,6 +11,19 @@ function DrawingModal({
   reimagineDrawing,
   savedDrawing,
 }) {
+  const [selectedColor, setSelectedColor] = useState('#000000'); // Default color is black
+
+  const colors = ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FFA500', '#800080', '#00FFFF', '#FFC0CB', '#8B4513']; // Added more colors
+
+  const handleColorChange = (color) => {
+    setSelectedColor(color);
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.strokeStyle = color; // Update drawing color
+    }
+  };
+
   useEffect(() => {
     // Load the saved drawing specific to the date if it exists
     const canvas = canvasRef.current;
@@ -41,7 +54,25 @@ function DrawingModal({
           onMouseDown={handleCanvasMouseDown}
           onMouseMove={handleCanvasMouseMove}
           onMouseUp={handleCanvasMouseUp}
+          style={{ border: '1px solid #000' }}
         />
+        <div className="color-palette">
+          <h3>Select Color:</h3>
+          {colors.map((color, index) => (
+            <button
+              key={index}
+              style={{
+                backgroundColor: color,
+                width: '30px',
+                height: '30px',
+                margin: '2px',
+                border: selectedColor === color ? '2px solid #000' : '1px solid #ccc',
+                cursor: 'pointer',
+              }}
+              onClick={() => handleColorChange(color)}
+            />
+          ))}
+        </div>
         <div className="drawing-buttons">
           <button onClick={saveDrawing}>Save</button>
           <button onClick={reimagineDrawing}>Re-imagine</button>
