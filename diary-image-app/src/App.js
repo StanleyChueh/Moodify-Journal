@@ -94,6 +94,14 @@ function App() {
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
   const [isRecording, setIsRecording] = useState(false); 
+  const [selectedLanguage, setSelectedLanguage] = useState('en-US');
+  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
+
+  const handleLanguageSelect = (languageCode) => {
+    setSelectedLanguage(languageCode);
+    setIsLanguageModalOpen(false); // Close modal
+    startSpeechRecognition(languageCode); // Start speech-to-text with the selected language
+  };
 
   // Wrap updateMoodAnalysis in useCallback
   const updateMoodAnalysis = useCallback(() => {
@@ -178,7 +186,7 @@ function App() {
     setPrompt(diaryEntries[date]?.description || '');
     setMood(diaryEntries[date]?.mood || 25);
     setImageUrl(diaryEntries[date]?.imageUrl || null);
-    //setSavedDrawing(diaryEntries[date]?.drawing || null);
+    setSavedDrawing(diaryEntries[date]?.drawing || null);
     setSpeechResult(diaryEntries[date]?.speechResult || ''); 
   };
 
@@ -217,9 +225,9 @@ function App() {
 
   const handleInputModeChange = (mode) => {
     setActiveInputMode(mode);
-    if (isRecording) {
-      stopSpeechRecognition(); 
-    }
+    if (isRecording) stopSpeechRecognition();
+    setActiveInputMode(mode);
+    if (mode === 'speech') setIsLanguageModalOpen(true); 
 
     setActiveInputMode(mode);
 
@@ -243,21 +251,35 @@ function App() {
     setSpeechResult('');
   };
 
-  const startSpeechRecognition = () => {
+  const startSpeechRecognition = (languageCode) => {
     if (!('webkitSpeechRecognition' in window)) {
       alert('Speech recognition is not supported in this browser.');
       return;
     }
 
     const recognition = new window.webkitSpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.interimResults = true;
+    recognition.lang = languageCode;
+    recognition.interimResults = false;
     recognition.continuous = true;
     recognitionRef.current = recognition;
 
+    let lastTranscript = ""; 
+
     recognition.onresult = (event) => {
-      const transcript = event.results[event.results.length - 1][0].transcript;
-      setSpeechResult((prevResult) => prevResult + ' ' + transcript);
+      let transcript = "";
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          if (result.isFinal) {  // Append only if the result is final
+              transcript += result[0].transcript.trim();
+          }
+      }
+
+      // Avoid duplicating words by comparing with the last appended text
+      if (transcript && transcript !== lastTranscript) {
+          setSpeechResult((prevResult) => prevResult + ' ' + transcript);
+          lastTranscript = transcript;  // Update last transcript to the new one
+      }
     };
 
     recognition.onerror = (event) => {
@@ -331,7 +353,15 @@ function App() {
   };
 
   const handleReimagine = () => {
-    setSavedDrawing(null); // Clear the saved drawing for re-imagining
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      // Clear the entire canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  
+    // Reset the savedDrawing state to clear the drawing in the state
+    setSavedDrawing(null);
     setDiaryEntries((prevEntries) => ({
       ...prevEntries,
       [selectedDate]: {
@@ -341,6 +371,7 @@ function App() {
     }));
     alert('The drawing has been cleared for re-imagining!');
   };
+  
   
   return (
     <div className="app-layout">
@@ -381,6 +412,14 @@ function App() {
             }}
           />
         </div>
+        
+        {isLanguageModalOpen && (
+          <div className="language-modal">
+            <h3>Choose Language for Speech-to-Text</h3>
+            <button onClick={() => handleLanguageSelect('en-US')}>English</button>
+            <button onClick={() => handleLanguageSelect('zh-TW')}>Taiwanese</button>
+          </div>
+        )}
 
         {activeInputMode === 'typing' && (
           <textarea
