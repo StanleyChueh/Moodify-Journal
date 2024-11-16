@@ -1,4 +1,5 @@
 import React from 'react';
+import './ReviewMemoriesModal.css'; // Add this for styling
 
 function ReviewMemoriesModal({ isOpen, onClose, happyDays, onSelectDate }) {
   if (!isOpen || happyDays.length === 0) return null; // Do not render if no happy memories
@@ -6,15 +7,22 @@ function ReviewMemoriesModal({ isOpen, onClose, happyDays, onSelectDate }) {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Cheer up🙌</h2>
-        <ul>
+        <h2 className="modal-title">Cheer up <span role="img" aria-label="hands">🙌</span></h2>
+        <p className="modal-message">
+          "We all have tough days. Here's a happy memory to brighten your day!"
+        </p>
+        <div className="memory-list">
           {happyDays.map((date) => (
-            <li key={date}>
-              <button onClick={() => onSelectDate(date)}>{date}</button>
-            </li>
+            <button
+              key={date}
+              className="memory-button"
+              onClick={() => onSelectDate(date)}
+            >
+              {date}
+            </button>
           ))}
-        </ul>
-        <button onClick={onClose}>Close</button>
+        </div>
+        <button className="close-button" onClick={onClose}>Close</button>
       </div>
     </div>
   );

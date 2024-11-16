@@ -4,6 +4,7 @@ import './App.css';
 import AlertModal from './AlertModal';
 import DrawingModal from './DrawingModal';
 import ReviewMemoriesModal from './ReviewMemoriesModal';
+import Chatbot from './components/Chatbot';
 
 // Constants
 const moodLabels = ["Anger", "Neutral", "Fear", "Sadness", "Surprise", "Happiness"];
