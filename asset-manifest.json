@@ -1,24 +1,24 @@
 {
   "files": {
-    "main.css": "/Moodify-Journal/static/css/main.9ba9fbfd.chunk.css",
-    "main.js": "/Moodify-Journal/static/js/main.be1c1e21.chunk.js",
-    "main.js.map": "/Moodify-Journal/static/js/main.be1c1e21.chunk.js.map",
-    "runtime-main.js": "/Moodify-Journal/static/js/runtime-main.af17ffcd.js",
-    "runtime-main.js.map": "/Moodify-Journal/static/js/runtime-main.af17ffcd.js.map",
+    "main.css": "/Moodify-Journal/static/css/main.08773c98.chunk.css",
+    "main.js": "/Moodify-Journal/static/js/main.72cc6282.chunk.js",
+    "main.js.map": "/Moodify-Journal/static/js/main.72cc6282.chunk.js.map",
+    "runtime-main.js": "/Moodify-Journal/static/js/runtime-main.689aedf5.js",
+    "runtime-main.js.map": "/Moodify-Journal/static/js/runtime-main.689aedf5.js.map",
     "static/js/2.f96b40ef.chunk.js": "/Moodify-Journal/static/js/2.f96b40ef.chunk.js",
     "static/js/2.f96b40ef.chunk.js.map": "/Moodify-Journal/static/js/2.f96b40ef.chunk.js.map",
-    "static/js/3.52625e33.chunk.js": "/Moodify-Journal/static/js/3.52625e33.chunk.js",
-    "static/js/3.52625e33.chunk.js.map": "/Moodify-Journal/static/js/3.52625e33.chunk.js.map",
+    "static/js/3.bc7fa719.chunk.js": "/Moodify-Journal/static/js/3.bc7fa719.chunk.js",
+    "static/js/3.bc7fa719.chunk.js.map": "/Moodify-Journal/static/js/3.bc7fa719.chunk.js.map",
     "index.html": "/Moodify-Journal/index.html",
-    "precache-manifest.3af4499402d58cf877d753f96521054f.js": "/Moodify-Journal/precache-manifest.3af4499402d58cf877d753f96521054f.js",
+    "precache-manifest.f59c5a18eb6f417da95ab1837e6fd6a3.js": "/Moodify-Journal/precache-manifest.f59c5a18eb6f417da95ab1837e6fd6a3.js",
     "service-worker.js": "/Moodify-Journal/service-worker.js",
-    "static/css/main.9ba9fbfd.chunk.css.map": "/Moodify-Journal/static/css/main.9ba9fbfd.chunk.css.map",
+    "static/css/main.08773c98.chunk.css.map": "/Moodify-Journal/static/css/main.08773c98.chunk.css.map",
     "static/js/2.f96b40ef.chunk.js.LICENSE.txt": "/Moodify-Journal/static/js/2.f96b40ef.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.af17ffcd.js",
+    "static/js/runtime-main.689aedf5.js",
     "static/js/2.f96b40ef.chunk.js",
-    "static/css/main.9ba9fbfd.chunk.css",
-    "static/js/main.be1c1e21.chunk.js"
+    "static/css/main.08773c98.chunk.css",
+    "static/js/main.72cc6282.chunk.js"
   ]
 }
