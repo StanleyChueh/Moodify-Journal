@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/Moodify-Journal/precache-manifest.8bf40d616b3d4f9e501354650a735205.js"
+  "/Moodify-Journal/precache-manifest.0cdf91661ad9f60ab52ea78ea8ac6b51.js"
 );
 
 self.addEventListener('message', (event) => {
