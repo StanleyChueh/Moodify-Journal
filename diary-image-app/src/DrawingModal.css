@@ -1,42 +1,163 @@
-.drawing-modal-overlay {
-  position: fixed;
+/* Modal Overlay */
+.drawing-overlay {
+  position: fixed !important;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  display: none; /* Hidden by default */
   justify-content: center;
   align-items: center;
+  z-index: 1000; /* Ensure it stays on top */
 }
 
-.drawing-modal {
-  background: #fff;
+.drawing-overlay.active {
+  display: flex; /* Show when active */
+}
+
+/* Modal Content */
+.drawing-modal-content {
+  background: #ffe4e3;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 15px;
   text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 750px; /* Adjust width to fit canvas */
+  position: relative;
 }
 
+/* Canvas */
 .drawing-canvas {
-  border: 1px solid #000; /* Add a border for visibility */
-  cursor: crosshair; /* Show crosshair when drawing */
-  width: 500px; /* Ensure width matches the component's width */
-  height: 300px; /* Ensure height matches the component's height */
+  border: 2px solid #ff7043; /* Use warm border color */
+  cursor: crosshair;
+  border-radius: 10px;
+  width: 700px; /* Match the width */
+  height: 700px; /* Match the height */
+  margin: 20px auto; /* Center canvas within the modal */
 }
 
-
-.drawing-modal-buttons button {
+/* Buttons */
+.drawing-buttons button {
+  background: #ff7043;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
   margin: 5px;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.color-palette {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
+.drawing-buttons button:hover {
+  background: #ff5722; /* Slightly darker on hover */
+  transform: scale(1.1); /* Subtle zoom effect */
 }
 
+/* Color Palette */
 .color-palette button {
-  border-radius: 50%;
-  outline: none;
+  border-radius: 50%; /* Circular color buttons */
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  border: 2px solid transparent; /* Clean border */
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.3s ease;
 }
 
+.color-palette button:hover {
+  transform: scale(1.2); /* Enlarge slightly on hover */
+  border-color: #ff7043; /* Highlight border */
+}
+
+.color-palette button.selected {
+  border-color: #ff5722; /* Highlight selected button */
+}
+
+/* For the "Draw Your Mood" title */
+.drawing-modal-content h2 {
+  color: #ff7043; /* Change to your desired color */
+  font-size: 2rem; /* Optional: Adjust font size */
+  font-weight: bold; /* Optional: Make it bold */
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for a warmer effect */
+  margin-bottom: 20px; /* Optional: Add spacing below */
+}
+
+/* For the "Select Color" title */
+.drawing-modal-content .color-palette h3 {
+  color: #ff5722; /* Change to your desired color */
+  font-size: 1.5rem; /* Optional: Adjust font size */
+  font-weight: 600; /* Optional: Slightly bold */
+  margin-bottom: 10px; /* Optional: Add spacing below */
+  text-transform: uppercase; /* Optional: Make it uppercase for style */
+}
+
+
+/* Modal Decoration */
+.modal-decoration {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 10px;
+  background: linear-gradient(90deg, #ff7043, #ff5722);
+  border-radius: 50px;
+  z-index: 2;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-decoration:after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 8px;
+  background: linear-gradient(90deg, #ff5722, #ff7043);
+  border-radius: 50px;
+}
+
+/* For the "Draw Your Mood" title */
+.drawing-modal-content h2 {
+  color: #ff7043;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  animation: fadeInDown 0.5s ease; /* Add fade-in animation */
+}
+
+/* For the "Select Color" title */
+.drawing-modal-content .color-palette h3 {
+  color: #ff5722;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  animation: fadeInLeft 0.5s ease; /* Add fade-in animation */
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

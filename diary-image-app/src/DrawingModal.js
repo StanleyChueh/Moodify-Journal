@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './DrawingModal.css';
 
 function DrawingModal({
   isOpen,
@@ -45,16 +46,16 @@ function DrawingModal({
   return (
     <div className={`drawing-overlay ${isOpen ? 'active' : ''}`}>
       <div className="drawing-modal-content">
+        <div className="modal-decoration"></div> {/* Optional decoration */}
         <h2>Draw Your Mood</h2>
         <canvas
           ref={canvasRef}
           className="drawing-canvas"
-          width="400"
-          height="400"
+          width="700"
+          height="700"
           onMouseDown={handleCanvasMouseDown}
           onMouseMove={handleCanvasMouseMove}
           onMouseUp={handleCanvasMouseUp}
-          style={{ border: '1px solid #000' }}
         />
         <div className="color-palette">
           <h3>Select Color:</h3>
@@ -68,6 +69,7 @@ function DrawingModal({
                 margin: '2px',
                 border: selectedColor === color ? '2px solid #000' : '1px solid #ccc',
                 cursor: 'pointer',
+                borderRadius: '50%', // Make color buttons circular
               }}
               onClick={() => handleColorChange(color)}
             />
