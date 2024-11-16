@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/Moodify-Journal/static/css/main.8e12e513.chunk.css",
-    "main.js": "/Moodify-Journal/static/js/main.9266d745.chunk.js",
-    "main.js.map": "/Moodify-Journal/static/js/main.9266d745.chunk.js.map",
+    "main.css": "/Moodify-Journal/static/css/main.8c97cf1d.chunk.css",
+    "main.js": "/Moodify-Journal/static/js/main.436411b3.chunk.js",
+    "main.js.map": "/Moodify-Journal/static/js/main.436411b3.chunk.js.map",
     "runtime-main.js": "/Moodify-Journal/static/js/runtime-main.689aedf5.js",
     "runtime-main.js.map": "/Moodify-Journal/static/js/runtime-main.689aedf5.js.map",
     "static/js/2.f96b40ef.chunk.js": "/Moodify-Journal/static/js/2.f96b40ef.chunk.js",
@@ -10,15 +10,15 @@
     "static/js/3.bc7fa719.chunk.js": "/Moodify-Journal/static/js/3.bc7fa719.chunk.js",
     "static/js/3.bc7fa719.chunk.js.map": "/Moodify-Journal/static/js/3.bc7fa719.chunk.js.map",
     "index.html": "/Moodify-Journal/index.html",
-    "precache-manifest.0cdf91661ad9f60ab52ea78ea8ac6b51.js": "/Moodify-Journal/precache-manifest.0cdf91661ad9f60ab52ea78ea8ac6b51.js",
+    "precache-manifest.e1dfb30893b2c9d5c9df28bf1357b778.js": "/Moodify-Journal/precache-manifest.e1dfb30893b2c9d5c9df28bf1357b778.js",
     "service-worker.js": "/Moodify-Journal/service-worker.js",
-    "static/css/main.8e12e513.chunk.css.map": "/Moodify-Journal/static/css/main.8e12e513.chunk.css.map",
+    "static/css/main.8c97cf1d.chunk.css.map": "/Moodify-Journal/static/css/main.8c97cf1d.chunk.css.map",
     "static/js/2.f96b40ef.chunk.js.LICENSE.txt": "/Moodify-Journal/static/js/2.f96b40ef.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.689aedf5.js",
     "static/js/2.f96b40ef.chunk.js",
-    "static/css/main.8e12e513.chunk.css",
-    "static/js/main.9266d745.chunk.js"
+    "static/css/main.8c97cf1d.chunk.css",
+    "static/js/main.436411b3.chunk.js"
   ]
 }
