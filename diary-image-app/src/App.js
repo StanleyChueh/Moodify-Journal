@@ -25,17 +25,89 @@ const imageCounts = {
   "Happiness": 11
 };
 
-// Define the function to get a random image based on mood
-function getRandomImageForMood(moodValue) {
-  let moodIndex = Math.floor((moodValue / 100) * moodLabels.length);
-  moodIndex = moodValue === 100 ? moodLabels.length - 1 : Math.min(moodIndex, moodLabels.length - 1);
+function ImageUploadModal({
+  isOpen,
+  onClose,
+  onSave,
+  onRemoveImage,
+  onResetToDefault,
+  selectedMoodForImage,
+  setSelectedMoodForImage,
+}) {
+  const [uploadedImage, setUploadedImage] = useState(null);
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setUploadedImage(reader.result); // Base64 representation of the image
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="image-upload-modal yellow-theme">
+        <h3>Upload Image for Mood</h3>
+        <label>
+          Select Mood:
+          <select
+            value={selectedMoodForImage}
+            onChange={(e) => setSelectedMoodForImage(e.target.value)}
+          >
+            {moodLabels.map((mood) => (
+              <option key={mood} value={mood}>
+                {mood}
+              </option>
+            ))}
+          </select>
+        </label>
+        <input type="file" accept="image/*" onChange={handleImageChange} />
+        {uploadedImage && (
+          <div className="uploaded-preview">
+            <img src={uploadedImage} alt="Uploaded preview" />
+          </div>
+        )}
+        <div className="modal-buttons">
+          <button className="button save-button" onClick={() => onSave(selectedMoodForImage, uploadedImage)}>
+            Save
+          </button>
+          <button className="button remove-button" onClick={() => onRemoveImage(selectedMoodForImage)}>
+            Remove
+          </button>
+          <button className="button reset-button" onClick={onResetToDefault}>
+            Default
+          </button>
+          <button className="button cancel-button" onClick={onClose}>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function getRandomImageForMood(moodValue, customMoodImages) {
+  const moodIndex = Math.min(
+    Math.floor((moodValue / 100) * moodLabels.length),
+    moodLabels.length - 1 // Stay within bounds
+  );
   const moodLabel = moodLabels[moodIndex];
+
+  // Check if a custom image is available for the mood
+  if (customMoodImages[moodLabel]) {
+    return customMoodImages[moodLabel];
+  }
+  
+  // Fall back to hardcoded images
   const directory = imageDirectories[moodLabel];
   const imageCount = imageCounts[moodLabel] || 1;
   const randomIndex = Math.floor(Math.random() * imageCount) + 1;
-
-  return `${process.env.PUBLIC_URL}/${directory}/image${randomIndex}.jpg`;
+  return `${process.env.PUBLIC_URL}/${directory}/image${randomIndex}.jpg`;  
 }
 
 // Define the function to get YouTube video ID
@@ -74,6 +146,48 @@ function initializeMoodAnalysis() {
   }, {});
 }
 
+function PlaylistModal({
+  isOpen,
+  onClose,
+  onSave,
+  selectedMoodForPlaylist,
+  setSelectedMoodForPlaylist,
+  youtubeLink,
+  setYoutubeLink,
+}) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="playlist-modal">
+      <h3>Customize Playlist</h3>
+      <label>
+        Select Mood:
+        <select
+          value={selectedMoodForPlaylist}
+          onChange={(e) => setSelectedMoodForPlaylist(e.target.value)}
+        >
+          {moodLabels.map((mood) => (
+            <option key={mood} value={mood}>
+              {mood}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        YouTube Link:
+        <input
+          type="url"
+          placeholder="Paste YouTube link here"
+          value={youtubeLink}
+          onChange={(e) => setYoutubeLink(e.target.value)}
+        />
+      </label>
+      <button onClick={() => onSave(selectedMoodForPlaylist, youtubeLink)}>Save</button>
+      <button onClick={onClose}>Cancel</button>
+    </div>
+  );
+}
+
 function App() {
   const dateList = generateDateList();
   const [diaryEntries, setDiaryEntries] = useState(initializeDiaryEntries(dateList));
@@ -83,8 +197,6 @@ function App() {
   const [mood, setMood] = useState(25);
   const [imageUrl, setImageUrl] = useState(diaryEntries[dateList[0]].imageUrl);
   const [activeInputMode, setActiveInputMode] = useState('typing');
-  const [isDrawingOpen, setIsDrawingOpen] = useState(false);
-  const [isSpeechOpen, setIsSpeechOpen] = useState(false);
   const [selectedMusic, setSelectedMusic] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [moodAnalysis, setMoodAnalysis] = useState(initializeMoodAnalysis());
@@ -95,12 +207,60 @@ function App() {
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
   const [isRecording, setIsRecording] = useState(false); 
-  const [selectedLanguage, setSelectedLanguage] = useState('en-US');
+  //const [selectedLanguage, setSelectedLanguage] = useState('en-US');
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
   const [happyMemories, setHappyMemories] = useState([]);
   const [isMemoryModalOpen, setIsMemoryModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [happyDays, setHappyDays] = useState([]);
+  const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
+  const [selectedMoodForPlaylist, setSelectedMoodForPlaylist] = useState("Anger");
+  const [youtubeLink, setYoutubeLink] = useState("");
+  const [isImageUploadModalOpen, setIsImageUploadModalOpen] = useState(false);
+  const [selectedMoodForImage, setSelectedMoodForImage] = useState("Anger");
+  //const image = getRandomImageForMood(mood, customMoodImages); // Pass customMoodImages
+  const [isOtherFunctionModalOpen, setIsOtherFunctionModalOpen] = useState(false);
+
+  const [customMoodImages, setCustomMoodImages] = useState({
+    Anger: null,
+    Neutral: null,
+    Fear: null,
+    Sadness: null,
+    Surprise: null,
+    Happiness: null,
+  });
+
+  const handleSaveCustomImage = (mood, image) => {
+    setCustomMoodImages((prevImages) => ({
+      ...prevImages,
+      [mood]: image,
+    }));
+    setIsImageUploadModalOpen(false);
+  
+    // Save to LocalStorage for persistence
+    localStorage.setItem("customMoodImages", JSON.stringify({
+      ...customMoodImages,
+      [mood]: image,
+    }));
+  };  
+
+  const [customPlaylists, setCustomPlaylists] = useState({
+    Anger: "",
+    Neutral: "",
+    Fear: "",
+    Sadness: "",
+    Surprise: "",
+    Happiness: "",
+  });  
+
+  const handleSaveCustomPlaylist = (mood, link) => {
+    setCustomPlaylists((prevPlaylists) => ({
+      ...prevPlaylists,
+      [mood]: link,
+    }));
+    setIsPlaylistModalOpen(false);
+    setYoutubeLink("");
+  };  
 
   const checkForGoodMemories = useCallback(() => {
     const last14Days = dateList.slice(0, 14);
@@ -135,7 +295,7 @@ function App() {
   };  
   
   const handleLanguageSelect = (languageCode) => {
-    setSelectedLanguage(languageCode);
+    //setSelectedLanguage(languageCode);
     setIsLanguageModalOpen(false); // Close modal
     startSpeechRecognition(languageCode); // Start speech-to-text with the selected language
   };
@@ -199,20 +359,84 @@ function App() {
   }, [diaryEntries, updateMoodAnalysis]);
 
   useEffect(() => {
-    const musicSuggestions = [
-      { moodRange: [0, 16], title: "Angry Music", playlistUrl: "https://www.youtube.com/watch?v=r8OipmKFDeM" },
-      { moodRange: [17, 33], title: "Neutral Music", playlistUrl: "https://www.youtube.com/watch?v=CFGLoQIhmow&t=2486s" },
-      { moodRange: [34, 50], title: "Fear Music", playlistUrl: "https://www.youtube.com/watch?v=P_tsPLT0irs" },
-      { moodRange: [51, 67], title: "Sad Music", playlistUrl: "https://www.youtube.com/watch?v=A_MjCqQoLLA" },
-      { moodRange: [68, 84], title: "Surprise Music", playlistUrl: "https://www.youtube.com/watch?v=HQmmM_qwG4k&t=2s" },
-      { moodRange: [85, 100], title: "Happy Music", playlistUrl: "https://www.youtube.com/watch?v=ZbZSe6N_BXs" },
-    ];
-
-    const currentMusic = musicSuggestions.find(
-      (music) => mood >= music.moodRange[0] && mood <= music.moodRange[1]
+    const moodIndex = Math.min(
+      Math.floor((mood / 100) * moodLabels.length),
+      moodLabels.length - 1 // Stay within bounds
     );
-    setSelectedMusic(currentMusic);
-  }, [mood]);
+    const moodLabel = moodLabels[moodIndex] || "Neutral"; // Fallback mood
+  
+    const defaultPlaylists = {
+      Anger: "https://youtu.be/FLTchCiC0T0?si=_LEx70RIBrG3HC_Z",
+      Neutral: "https://youtu.be/pTweN7F2PFA?si=5v6Ney7A9MTtJ086",
+      Fear: "https://www.youtube.com/watch?v=0qanF-91aJo",
+      Sadness: "https://youtu.be/FFlPgTPvRJc?si=9SzqK2Vf7KaeAsFk",
+      Surprise: "https://www.youtube.com/watch?v=HQmmM_qwG4k&t=2s",
+      Happiness: "https://www.youtube.com/watch?v=ZbZSe6N_BXs",
+    };
+  
+    const playlistUrl = customPlaylists[moodLabel] || defaultPlaylists[moodLabel];
+  
+    setSelectedMusic({
+      title: `${moodLabel} Playlist`,
+      playlistUrl,
+    });
+  }, [mood, customPlaylists]);
+
+  useEffect(() => {
+    const savedImages = localStorage.getItem("customMoodImages");
+    if (savedImages) {
+      setCustomMoodImages(JSON.parse(savedImages));
+    }
+  }, []);
+  
+
+  useEffect(() => {
+    // Save diary entries to LocalStorage
+    localStorage.setItem('diaryEntries', JSON.stringify(diaryEntries));
+  }, [diaryEntries]);
+  
+  useEffect(() => {
+    // Save mood analysis to LocalStorage
+    localStorage.setItem('moodAnalysis', JSON.stringify(moodAnalysis));
+  }, [moodAnalysis]);
+  
+  useEffect(() => {
+    // Save custom playlists to LocalStorage
+    localStorage.setItem('customPlaylists', JSON.stringify(customPlaylists));
+  }, [customPlaylists]);  
+
+  useEffect(() => {
+    // Load diary entries from LocalStorage
+    const savedDiaryEntries = localStorage.getItem('diaryEntries');
+    if (savedDiaryEntries) {
+      setDiaryEntries(JSON.parse(savedDiaryEntries));
+    }
+  
+    // Load mood analysis from LocalStorage
+    const savedMoodAnalysis = localStorage.getItem('moodAnalysis');
+    if (savedMoodAnalysis) {
+      setMoodAnalysis(JSON.parse(savedMoodAnalysis));
+    }
+  
+    // Load custom playlists from LocalStorage
+    const savedPlaylists = localStorage.getItem('customPlaylists');
+    if (savedPlaylists) {
+      setCustomPlaylists(JSON.parse(savedPlaylists));
+    }
+  }, []); // Run once on component mount
+  
+  useEffect(() => {
+    // Save selected date
+    localStorage.setItem('selectedDate', selectedDate);
+  }, [selectedDate]);
+  
+  useEffect(() => {
+    // Load selected date
+    const savedSelectedDate = localStorage.getItem('selectedDate');
+    if (savedSelectedDate) {
+      setSelectedDate(savedSelectedDate);
+    }
+  }, []);  
 
   const handleClear = () => {
     if (activeInputMode === 'typing') {
@@ -259,22 +483,23 @@ function App() {
         startSpeechRecognition();
         alert('Recording started...');
       }
-    } else{
-    const image = getRandomImageForMood(mood);
-    setImageUrl(image);
-
-    setDiaryEntries((prevEntries) => ({
-      ...prevEntries,
-      [selectedDate]: {
-        description: prompt,
-        mood: mood,
-        imageUrl: image,
-        speechResult: speechResult,
-      },
-    }));
-    alert('Entry saved successfully!');
+    } else {
+      const image = getRandomImageForMood(mood, customMoodImages); // Pass customMoodImages
+      setImageUrl(image);
+  
+      setDiaryEntries((prevEntries) => ({
+        ...prevEntries,
+        [selectedDate]: {
+          description: prompt,
+          mood: mood,
+          imageUrl: image,
+          speechResult: speechResult,
+        },
+      }));
+      alert('Entry saved successfully!');
     }
   };
+  
 
   const handleInputModeChange = (mode) => {
     setActiveInputMode(mode);
@@ -425,6 +650,40 @@ function App() {
     alert('The drawing has been cleared for re-imagining!');
   };
   
+  const handleRemoveImage = (mood) => {
+    setCustomMoodImages((prevImages) => ({
+      ...prevImages,
+      [mood]: null, // Remove the custom image for the selected mood
+    }));
+  
+    // Update LocalStorage
+    localStorage.setItem(
+      "customMoodImages",
+      JSON.stringify({
+        ...customMoodImages,
+        [mood]: null,
+      })
+    );
+  };
+
+  const handleResetToDefault = () => {
+    const confirmed = window.confirm("Are you sure you want to reset all custom images?");
+    if (!confirmed) return;
+  
+    // Reset all custom images to null
+    setCustomMoodImages({
+      Anger: null,
+      Neutral: null,
+      Fear: null,
+      Sadness: null,
+      Surprise: null,
+      Happiness: null,
+    });
+  
+    // Update LocalStorage
+    localStorage.removeItem("customMoodImages");
+  };
+
   const handleReviewMemories = () => {
     const last14Days = dateList.slice(0, 14);
     const happyDays = last14Days.filter(date => {
@@ -433,7 +692,7 @@ function App() {
     });
 
     if (happyDays.length > 0) {
-      setHappyMemories(happyDays);
+      //setHappyMemories(happyDays);
       setIsMemoryModalOpen(true);
     }
   };
@@ -507,16 +766,38 @@ function App() {
             <p>{speechResult}</p>
           </div>
         )}
+
         <div className="button-container">
           <button className="button enter-button" onClick={handleEnter}>
             Enter
           </button>
-
           <button className="button clear-button" onClick={handleClear}>
-              Clear
+            Clear
+          </button>
+          <button
+            className="button customize-playlist-button"
+            onClick={() => setIsPlaylistModalOpen(true)}
+          >
+            Music
+          </button>
+          <button
+            className="button customize-image-button"
+            onClick={() => setIsImageUploadModalOpen(true)} // Opens the ImageUploadModal
+          >
+            Image
           </button>
         </div>
         
+        <PlaylistModal
+          isOpen={isPlaylistModalOpen}
+          onClose={() => setIsPlaylistModalOpen(false)}
+          onSave={handleSaveCustomPlaylist}
+          selectedMoodForPlaylist={selectedMoodForPlaylist}
+          setSelectedMoodForPlaylist={setSelectedMoodForPlaylist}
+          youtubeLink={youtubeLink}
+          setYoutubeLink={setYoutubeLink}
+        />
+
         <div className="image-display">
           {imageUrl ? (
             <img src={imageUrl} alt="Mood" className="generated-image" />
@@ -596,6 +877,16 @@ function App() {
           onSelectDate={handleSelectDate}
         />
       )}
+
+      <ImageUploadModal
+        isOpen={isImageUploadModalOpen}
+        onClose={() => setIsImageUploadModalOpen(false)}
+        onSave={handleSaveCustomImage}
+        onRemoveImage={handleRemoveImage} // Pass handleRemoveImage
+        onResetToDefault={handleResetToDefault} // Pass handleResetToDefault
+        selectedMoodForImage={selectedMoodForImage}
+        setSelectedMoodForImage={setSelectedMoodForImage}
+      />
     </div>
 
   );

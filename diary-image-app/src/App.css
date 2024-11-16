@@ -125,39 +125,75 @@
     box-shadow: 0 0 8px #ff7043;
 }
 
-/* Button Styling */
 .button-container {
     display: flex;
-    gap: 15px;
+    justify-content: space-evenly;
+    gap: 15px; /* Space between buttons */
+    margin: 20px 0; /* Adjust vertical spacing */
 }
 
 .button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 12px;
+    padding: 12px 20px; /* Consistent size */
+    border-radius: 15px; /* Rounded corners */
+    border: none; /* No border */
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    font-size: 16px; /* Uniform font size */
+    color: white; /* Text color */
+    transition: all 0.3s ease; /* Smooth hover effect */
+    width: 100px; /* Ensure all buttons are the same width */
+    text-align: center; /* Center text */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
 }
 
 .enter-button {
     background-color: #ff7043;
-    color: white;
+    /*color: white;*/
 }
 
 .enter-button:hover {
     background-color: #ff5722;
-    transform: scale(1.1);
+    transform: scale(1.05); 
 }
 
 .clear-button {
     background-color: #e57373;
-    color: white;
+   /*transform: scale(1.05);*/ 
 }
 
 .clear-button:hover {
     background-color: #d32f2f;
-    transform: scale(1.1);
+    transform: scale(1.05);
+}
+
+.customize-playlist-button {
+    background-color: #e39ac2;
+    /*transform: scale(1.05);*/
+}
+  
+.customize-playlist-button:hover {
+    background-color: #f5429b;
+    transform: scale(1.05);
+}
+
+.customize-image-button {
+    background-color: #ffa726; /* Yellowish color for Image */
+    border-radius: 15px;
+}
+.customize-image-button:hover {
+    background-color: #fbc02d;
+    transform: scale(1.05);
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-evenly; /* Even spacing */
+    gap: 15px; /* Equal spacing between buttons */
+    margin: 20px 0; /* Vertical margin */
+}
+
+.button:hover {
+    transform: scale(1.05);
+    opacity: 0.9; /* Light fade effect */
 }
 
 /* Image Display Styling */
@@ -378,4 +414,219 @@
 .language-modal button:focus {
     outline: none;
     box-shadow: 0 0 5px #ff7043; /* Highlight button when focused */
+}
+
+.playlist-modal {
+    position: fixed;
+    top: 50%;
+    left: 54%;
+    transform: translate(-50%, -50%);
+    background: #ffe4e3;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 3000;
+    text-align: center;
+    width: 300px;
+}
+  
+/* For the YouTube link input field */
+.playlist-modal input[type="url"] {
+    width: 100%; /* Reduce width to 90% of the modal */
+    max-width: 400px; /* Set a maximum width */
+    padding: 8px; /* Add padding for better spacing */
+    border: 2px solid #ff7043; /* Adjust the border */
+    border-radius: 8px; /* Smooth corners */
+    margin: 10px 0; /* Add spacing above and below */
+    box-sizing: border-box; /* Ensure padding doesn't affect total width */
+  }
+  
+  .playlist-modal select {
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ff7043;
+    border-radius: 5px;
+}
+  
+  .playlist-modal button {
+    margin: 5px;
+    padding: 10px 20px;
+    background-color: #ff7043;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.image-upload-modal img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+}
+  
+  .image-upload-modal input {
+    margin: 10px 0;
+}
+
+.button.customize-image-button {
+    background-color: #ffa726; /* Yellowish color for Image */
+    border-radius: 15px !important; /* Force rounded corners */
+    width: 100px; /* Ensure consistent width */
+    padding: 12px 20px; /* Consistent size */
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+  
+.button.customize-image-button:hover {
+    background-color: #fbc02d;
+}
+
+.button:hover {
+    opacity: 0.8;
+}
+
+.customize-image-button {
+    background-color: #ffa726; /* Color for Image */
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 112, 67, 0.15); /* Warm semi-transparent overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.image-upload-modal {
+    background: linear-gradient(145deg, #fff5e6, #fff0e6); /* Warm gradient background */
+    border: 2px solid #ff9f68; /* Warmer orange border */
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 24px rgba(255, 112, 67, 0.15); /* Warm shadow */
+    width: 420px;
+    max-width: 90%;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    position: fixed;
+    top: 50%; /* Centers the modal vertically */
+    left: 44%; /* Moves it to the left */
+    transform: translateY(-50%); /* Keeps vertical centering intact */
+    z-index: 1000;
+}
+
+.image-upload-modal h3 {
+    font-size: 24px;
+    color: #ff7043; /* Warm orange text */
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.image-upload-modal label {
+    font-size: 16px;
+    color: #666;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.image-upload-modal select {
+    width: 200px;
+    padding: 8px 12px;
+    border: 2px solid #ffccbc;
+    border-radius: 10px;
+    background-color: #fff;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.image-upload-modal select:focus {
+    border-color: #ff9f68;
+    outline: none;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+    gap: 12px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.modal-buttons .save-button {
+    background: #ff9f68; /* Warm orange */
+    color: white;
+}
+
+.modal-buttons .save-button:hover {
+    background: #ff7043;
+    transform: translateY(-2px);
+}
+
+.modal-buttons .remove-button {
+    background: #ff8a80; /* Warm red */
+    color: white;
+}
+
+.modal-buttons .remove-button:hover {
+    background: #ff5252;
+    transform: translateY(-2px);
+}
+
+.modal-buttons .reset-button {
+    background: #ffccbc; /* Light warm orange */
+    color: #666;
+}
+
+.modal-buttons .reset-button:hover {
+    background: #ffab91;
+    transform: translateY(-2px);
+}
+
+.modal-buttons .cancel-button {
+    background: #fbe9e7; /* Very light warm orange */
+    color: #666;
+}
+
+.modal-buttons .cancel-button:hover {
+    background: #ffccbc;
+    transform: translateY(-2px);
+}
+
+.uploaded-preview img {
+    max-width: 100%;
+    margin-top: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 16px rgba(255, 112, 67, 0.2); /* Warm shadow */
+}
+
+/* File input styling */
+.image-upload-modal input[type="file"] {
+    display: block;
+    width: 95%;
+    padding: 10px;
+    margin: 15px 0;
+    border: 2px dashed #ffccbc;
+    border-radius: 12px;
+    background: #fff9f5;
+    cursor: pointer;
+}
+
+.image-upload-modal input[type="file"]:hover {
+    border-color: #ff9f68;
+    background: #fff5ee;
 }
