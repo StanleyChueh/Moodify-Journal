@@ -235,6 +235,7 @@ function App() {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [backgroundMusic, setBackgroundMusic] = useState("https://youtu.be/CFGLoQIhmow?si=SQ5DQVCCAmKdOt3K"); // Default YouTube link
   const [isBackgroundMusicPlaying, setIsBackgroundMusicPlaying] = useState(false); // Tracks music playback
+  const [isFAQModalOpen, setIsFAQModalOpen] = useState(false);
   const [youtubePlayer, setYoutubePlayer] = useState(null); // Reference to YouTube IFrame player
   const [customMoodImages, setCustomMoodImages] = useState({
     Anger: [],
@@ -544,6 +545,43 @@ function App() {
     }
   }, []);  
 
+  const FAQModal = ({ onClose }) => (
+    <div className="faq-modal">
+      <h3>Frequently Asked Questions</h3>
+      <ul>
+        <li>
+          <span>Q1: What is this app about?</span>
+          <p>This app allows users to document their daily moods...</p>
+        </li>
+        {/* Other FAQ items */}
+      </ul>
+      <hr className="faq-divider" />
+      <div className="author-info">
+        <h4>About the Author</h4>
+        <p>
+          Created by: <strong>Your Name</strong>
+        </p>
+        <p>
+          Email: <a href="mailto:your.email@example.com">your.email@example.com</a>
+        </p>
+      </div>
+      <div className="report-issue">
+        <h4>Report an Issue</h4>
+        <p>
+          Found a problem? Submit an issue on our{" "}
+          <a href="https://github.com/your-repo/issues" target="_blank" rel="noopener noreferrer">
+            GitHub Issues Page
+          </a>.
+        </p>
+      </div>
+      <button onClick={onClose}>Close</button> {/* Calls the onClose function */}
+    </div>
+  );  
+
+  const handleCloseFAQModal = () => {
+    setIsFAQModalOpen(false);
+  };
+
   const handleClear = () => {
     if (activeInputMode === 'typing') {
       setPrompt('');
@@ -623,8 +661,8 @@ function App() {
     setActiveInputMode(mode);
 
     if (mode === 'speech') {
-      //setIsSpeechOpen(true);
-      startSpeechRecognition();
+      setIsLanguageModalOpen(true); 
+      //tartSpeechRecognition();
     } else {
       stopSpeechRecognition();
       //setIsSpeechOpen(false);
@@ -834,6 +872,12 @@ function App() {
     }
   };
 
+  const handleCatClick = () => {
+    // Trigger FAQ modal or functionality
+    //alert("Here's the FAQ!"); // For testing
+    setIsFAQModalOpen(true); // Open the FAQ modal
+  };  
+
   useEffect(() => {
     if (mood < 51) { // Assuming 0-50 is sadness or fear
       handleReviewMemories();
@@ -939,7 +983,11 @@ function App() {
 
         <div className="image-display">
           {imageUrl ? (
-            <img src={imageUrl} alt="Mood" className="generated-image" />
+            <img
+              src={imageUrl}
+              alt="Mood"
+              className="generated-image"
+            />
           ) : (
             <div className="placeholder">images for your mood</div>
           )}
@@ -1076,9 +1124,74 @@ function App() {
       </div>
 
       <div id="background-music-player"></div>
-      <div className="cat-animation">
+      <div className="cat-animation" onClick={handleCatClick}> 
         <img src={catGif} alt="Running Cat" className="cat" />
       </div>
+      
+      
+      {isFAQModalOpen && (
+        <div className="modal-overlay">
+          <div className="faq-modal">
+            <h3>Frequently Asked Questions</h3>
+            <ul>
+              <li>
+                <span>Q1: What is this app about?</span>
+                <p>This app allows users to document their daily moods, add visual elements like drawings or images, and listen to mood-specific playlists.</p>
+              </li>
+              <li>
+                <span>Q2: How do I record my mood?</span>
+                <p>You can type in your diary entry, use voice-to-text functionality, or upload a drawing to reflect your mood.</p>
+              </li>
+              <li>
+                <span>Q3: How do I customize playlists?</span>
+                <p>Use the "Music" button to add a YouTube link for a mood-specific playlist or background music.</p>
+              </li>
+              <li>
+                <span>Q4: How do I save images for moods?</span>
+                <p>Use the "Image" button to upload and save custom images for each mood.</p>
+              </li>
+              <li>
+                <span>Q5: How do I switch between input modes?</span>
+                <p>Click the icons at the top (keyboard, microphone, or pen) to type, speak, or draw your mood.</p>
+              </li>
+              <li>
+                <span>Q6: What happens when I click the cat GIF?</span>
+                <p>Clicking the cat opens this FAQ to help you better understand how to use the app.</p>
+              </li>
+            </ul>
+            <hr className="faq-divider" />
+            <div className="author-info">
+              <h4>About the Author</h4>
+              <p>
+                Created by: <strong>Stanley Chueh</strong>
+              </p>
+              <p>
+                Email: <a href="mailto:stanleychueh28@gmail.com">stanleychueh28@gmail.com</a>
+              </p>
+              <p>
+                For more information, visit my{" "}
+                <a href="https://github.com/StanleyChueh/Moodify-Journal" target="_blank" rel="noopener noreferrer">
+                  GitHub Repository
+                </a>.
+              </p>
+            </div>
+            <div className="report-issue">
+              <h4>Report an Issue</h4>
+              <p>
+                Found a problem? Please let me know by submitting an issue on my{" "}
+                <a href="https://github.com/StanleyChueh/Moodify-Journal/issues" target="_blank" rel="noopener noreferrer">
+                  GitHub Issues Page
+                </a>.
+              </p>
+            </div>
+            <button className="cancel-button" onClick={handleCloseFAQModal}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+
     </div>
 
   );

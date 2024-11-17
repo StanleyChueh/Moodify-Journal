@@ -702,25 +702,27 @@ cursor: pointer; /* Optional: Add pointer cursor */
 }
 
 .music-toggle-button {
-position: absolute;
-top: 10px; /* Adjust this to fit your layout */
-right: 10px; /* Adjust to align with your design */
-background: linear-gradient(90deg, #FFD700, #FFA500);
-border: none;
-color: #fff;
-font-size: 16px;
-font-weight: bold;
-border-radius: 20px;
-padding: 10px 20px;
-cursor: pointer;
-transition: transform 0.2s, box-shadow 0.2s;
-box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
+    position: absolute;
+    top: 10px; /* Adjust this to fit your layout */
+    right: 10px; /* Adjust to align with your design */
+    background: linear-gradient(90deg, #FFD700, #FFA500);
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
 
 .music-toggle-button:hover {
 transform: scale(1.1);
 box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
 }
+
 
 .music-toggle-button:active {
 transform: scale(1.05);
@@ -729,7 +731,7 @@ box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 
 .cat-animation {
 position: fixed;
-top: 20px; /* Position it below the music button */
+top: 40px; /* Position it below the music button */
 right: 0px; /* Align with the music button */
 left: 2200px;
 display: flex;
@@ -790,4 +792,190 @@ left: -100px; /* End off-screen on the left */
     margin: 0 auto;
     border-radius: 10px; /* Optional */
   }
+
+  /* FAQ Modal Container */
+.faq-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background: linear-gradient(145deg, #fff5e6, #ffe9d6);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    width: 80%;
+    max-width: 500px;
+    font-family: 'Poppins', sans-serif;
+    color: #4f4f4f;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
   
+  /* Modal Header */
+  .faq-modal h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #ff7043;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* FAQ List */
+  .faq-modal ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+  }
+  
+  .faq-modal ul li {
+    background: rgba(255, 255, 255, 0.6);
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .faq-modal ul li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 112, 67, 0.15);
+  }
+  
+  /* Question Text */
+  .faq-modal ul li span {
+    font-weight: bold;
+    color: #ff7043;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+  }
+  
+  /* Answer Text */
+  .faq-modal ul li p {
+    margin-top: 5px;
+    color: #555;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+  
+  /* Divider */
+  .faq-divider {
+    margin: 20px 0;
+    border: none;
+    height: 1px;
+    background: #ffccbc;
+  }
+  
+  /* Author Info Section */
+  .author-info,
+  .report-issue {
+    margin-top: 15px;
+    padding: 15px;
+    background: #fffaf3;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .author-info h4,
+  .report-issue h4 {
+    color: #ff7043;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .author-info p,
+  .report-issue p {
+    font-size: 1rem;
+    color: #4f4f4f;
+    line-height: 1.5;
+    text-align: center;
+  }
+  
+  /* Links */
+  .author-info a,
+  .report-issue a {
+    color: #ff7043;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s;
+  }
+  
+  .author-info a:hover,
+  .report-issue a:hover {
+    text-decoration: underline;
+    color: #ff9f68;
+  }
+  
+  /* Close Button */
+  .faq-modal button.cancel-button {
+    display: block;
+    margin: 20px auto 0;
+    padding: 10px 25px;
+    background: #ff7043;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .faq-modal button.cancel-button:hover {
+    background: #ff9f68;
+    transform: scale(1.05);
+  }
+  
+  /* Scrollbar Styling */
+  .faq-modal::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .faq-modal::-webkit-scrollbar-track {
+    background: #fff5e6;
+    border-radius: 4px;
+  }
+  
+  .faq-modal::-webkit-scrollbar-thumb {
+    background: #ffccbc;
+    border-radius: 4px;
+  }
+  
+  .faq-modal::-webkit-scrollbar-thumb:hover {
+    background: #ff9f68;
+  }
+  
+  /* Modal Overlay */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 112, 67, 0.15);
+    backdrop-filter: blur(3px);
+    z-index: 999;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .faq-modal {
+      width: 90%;
+      padding: 20px;
+      margin: 20px;
+    }
+  
+    .faq-modal h3 {
+      font-size: 1.5rem;
+    }
+  
+    .faq-modal ul li span {
+      font-size: 1rem;
+    }
+  
+    .faq-modal ul li p {
+      font-size: 0.95rem;
+    }
+  }
