@@ -33,15 +33,15 @@ function ImageUploadModal({
   onResetToDefault,
   selectedMoodForImage,
   setSelectedMoodForImage,
+  uploadedImage, // Receive uploadedImage as a prop
+  setUploadedImage, // Receive setUploadedImage as a prop
 }) {
-  const [uploadedImage, setUploadedImage] = useState(null);
-
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setUploadedImage(reader.result); // Base64 representation of the image
+        setUploadedImage(reader.result); // Update global state for uploadedImage
       };
       reader.readAsDataURL(file);
     }
@@ -98,16 +98,22 @@ function getRandomImageForMood(moodValue, customMoodImages) {
   );
   const moodLabel = moodLabels[moodIndex];
 
-  // Check if a custom image is available for the mood
-  if (customMoodImages[moodLabel]) {
-    return customMoodImages[moodLabel];
-  }
-  
-  // Fall back to hardcoded images
-  const directory = imageDirectories[moodLabel];
-  const imageCount = imageCounts[moodLabel] || 1;
-  const randomIndex = Math.floor(Math.random() * imageCount) + 1;
-  return `${process.env.PUBLIC_URL}/${directory}/image${randomIndex}.jpg`;  
+  // Get custom images for this mood
+  const customImages = customMoodImages[moodLabel] || [];
+
+  // Add folder-based images for this mood
+  const folderImages = Array.from(
+    { length: imageCounts[moodLabel] || 0 },
+    (_, index) =>
+      `${process.env.PUBLIC_URL}/${imageDirectories[moodLabel]}/image${index + 1}.jpg`
+  );
+
+  // Combine custom and folder-based images
+  const allImages = [...customImages, ...folderImages];
+
+  // Pick a random image
+  const randomIndex = Math.floor(Math.random() * allImages.length);
+  return allImages[randomIndex];
 }
 
 // Define the function to get YouTube video ID
@@ -218,30 +224,41 @@ function App() {
   const [youtubeLink, setYoutubeLink] = useState("");
   const [isImageUploadModalOpen, setIsImageUploadModalOpen] = useState(false);
   const [selectedMoodForImage, setSelectedMoodForImage] = useState("Anger");
-  //const image = getRandomImageForMood(mood, customMoodImages); // Pass customMoodImages
   const [isOtherFunctionModalOpen, setIsOtherFunctionModalOpen] = useState(false);
+  const [isRemoveImageModalOpen, setIsRemoveImageModalOpen] = useState(false);
+  const [moodToRemoveImages, setMoodToRemoveImages] = useState("Anger");
+  const [uploadedImage, setUploadedImage] = useState(null);
+
 
   const [customMoodImages, setCustomMoodImages] = useState({
-    Anger: null,
-    Neutral: null,
-    Fear: null,
-    Sadness: null,
-    Surprise: null,
-    Happiness: null,
-  });
+    Anger: [],
+    Neutral: [],
+    Fear: [],
+    Sadness: [],
+    Surprise: [],
+    Happiness: [],
+  });  
 
   const handleSaveCustomImage = (mood, image) => {
     setCustomMoodImages((prevImages) => ({
       ...prevImages,
-      [mood]: image,
+      [mood]: [...(prevImages[mood] || []), image], // Add the new image to the existing list
     }));
-    setIsImageUploadModalOpen(false);
   
     // Save to LocalStorage for persistence
-    localStorage.setItem("customMoodImages", JSON.stringify({
-      ...customMoodImages,
-      [mood]: image,
-    }));
+    localStorage.setItem(
+      "customMoodImages",
+      JSON.stringify({
+        ...customMoodImages,
+        [mood]: [...(customMoodImages[mood] || []), image],
+      })
+    );
+  
+    // Reset the uploaded image preview
+    setUploadedImage(null);
+  
+    // Close the modal
+    setIsImageUploadModalOpen(false);
   };  
 
   const [customPlaylists, setCustomPlaylists] = useState({
@@ -387,8 +404,13 @@ function App() {
     if (savedImages) {
       setCustomMoodImages(JSON.parse(savedImages));
     }
-  }, []);
+  }, []);  
   
+  useEffect(() => {
+    if (!isImageUploadModalOpen) {
+      setUploadedImage(null); // Reset preview when modal is closed
+    }
+  }, [isImageUploadModalOpen]);  
 
   useEffect(() => {
     // Save diary entries to LocalStorage
@@ -446,6 +468,11 @@ function App() {
     }
   };
 
+  const handleCloseModal = () => {
+    setUploadedImage(null); // Clear the preview
+    setIsImageUploadModalOpen(false); // Close the modal
+  };  
+
   const handleDateClick = (date) => {
     setDiaryEntries((prevEntries) => ({
       ...prevEntries,
@@ -468,6 +495,8 @@ function App() {
   };
 
   const handleEnter = () => {
+    const image = getRandomImageForMood(mood, customMoodImages);
+    setImageUrl(image);
     if (activeInputMode === 'speech') {
       if (isRecording) {
         stopSpeechRecognition();
@@ -650,13 +679,37 @@ function App() {
     alert('The drawing has been cleared for re-imagining!');
   };
   
-  const handleRemoveImage = (mood) => {
-    setCustomMoodImages((prevImages) => ({
-      ...prevImages,
-      [mood]: null, // Remove the custom image for the selected mood
-    }));
+  const confirmRemoveImage = (mood, index) => {
+    const customImages = customMoodImages[mood] || [];
   
-    // Update LocalStorage
+    // Check if the image belongs to custom images
+    if (index < customImages.length) {
+      // Remove from custom images
+      const updatedImages = customImages.filter((_, i) => i !== index);
+      setCustomMoodImages((prevImages) => ({
+        ...prevImages,
+        [mood]: updatedImages,
+      }));
+  
+      // Update LocalStorage
+      localStorage.setItem(
+        "customMoodImages",
+        JSON.stringify({
+          ...customMoodImages,
+          [mood]: updatedImages,
+        })
+      );
+    } else {
+      // For hardcoded images, no action is needed as they are not dynamically updated
+      alert("Hardcoded images cannot be removed dynamically!");
+    }
+  };  
+
+  const handleRemoveImage = (mood) => {
+    setMoodToRemoveImages(mood); // Set the selected mood
+    setIsRemoveImageModalOpen(true); // Open the Remove Image modal
+  
+    // Update LocalStorage (if needed)
     localStorage.setItem(
       "customMoodImages",
       JSON.stringify({
@@ -664,25 +717,25 @@ function App() {
         [mood]: null,
       })
     );
-  };
+  };  
 
   const handleResetToDefault = () => {
     const confirmed = window.confirm("Are you sure you want to reset all custom images?");
     if (!confirmed) return;
   
-    // Reset all custom images to null
+    // Reset all custom images to empty arrays
     setCustomMoodImages({
-      Anger: null,
-      Neutral: null,
-      Fear: null,
-      Sadness: null,
-      Surprise: null,
-      Happiness: null,
+      Anger: [],
+      Neutral: [],
+      Fear: [],
+      Sadness: [],
+      Surprise: [],
+      Happiness: [],
     });
   
-    // Update LocalStorage
+    // Remove from LocalStorage
     localStorage.removeItem("customMoodImages");
-  };
+  };  
 
   const handleReviewMemories = () => {
     const last14Days = dateList.slice(0, 14);
@@ -880,13 +933,50 @@ function App() {
 
       <ImageUploadModal
         isOpen={isImageUploadModalOpen}
-        onClose={() => setIsImageUploadModalOpen(false)}
+        onClose={handleCloseModal}
         onSave={handleSaveCustomImage}
-        onRemoveImage={handleRemoveImage} // Pass handleRemoveImage
-        onResetToDefault={handleResetToDefault} // Pass handleResetToDefault
+        onRemoveImage={handleRemoveImage}
+        onResetToDefault={handleResetToDefault}
         selectedMoodForImage={selectedMoodForImage}
         setSelectedMoodForImage={setSelectedMoodForImage}
+        uploadedImage={uploadedImage} // Pass uploadedImage as a prop
+        setUploadedImage={setUploadedImage} // Pass setUploadedImage as a prop
       />
+
+      {isRemoveImageModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Select Image to Remove for {moodToRemoveImages}</h3>
+            <div className="image-grid">
+              {[
+                // Combine custom images and hardcoded images
+                ...(customMoodImages[moodToRemoveImages] || []),
+                ...Array.from(
+                  { length: imageCounts[moodToRemoveImages] || 0 },
+                  (_, index) =>
+                    `${process.env.PUBLIC_URL}/${imageDirectories[moodToRemoveImages]}/image${index + 1}.jpg`
+                ),
+              ].map((image, index) => (
+                <div key={index} className="image-item">
+                  <img src={image} alt={`Image ${index + 1}`} />
+                  <button
+                    className="remove-btn"
+                    onClick={() => confirmRemoveImage(moodToRemoveImages, index)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+            <button
+              className="button cancel-button"
+              onClick={() => setIsRemoveImageModalOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
 
   );
