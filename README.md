@@ -4,16 +4,17 @@ Diary AI is a web application that encourages diary writing by converting daily 
 
 ## Features
 
-- **Multi-Input Modes**: Supports typing, drawing, and speech-to-text for entries.
-- **Language Selection for Speech-to-Text**: Choose between English and Traditional Chinese (Taiwanese) for voice input.
-- **Mood-Based Image Generation**: Generates random images based on selected moods to enhance diary entries visually.
-- **Mood Slider with Emoji Representation**: Users can adjust mood using a slider with emojis representing different emotional states.
-- **Mood Analysis**: Tracks and summarizes mood trends over the past 14 days using emojis.
-- **Suggested Music Playlists**: Recommends music playlists based on mood selection.
+- **Multi-Input Modes**: Create diary entries by typing, drawing, or using speech-to-text functionality.
+- **Language Support for Speech-to-Text**: Choose between **English** and **Traditional Chinese (Taiwanese)** for voice input.
+- **Mood-Based Image Generation**: Automatically generate mood-specific images to visually enhance your entries.
+- **Mood Slider with Emoji Representation**: Adjust your mood using an interactive slider with emojis reflecting emotional states.
+- **Mood Analysis**: Gain insights into your emotional trends with a summarized emoji-based analysis of the past 14 days.
+- **Suggested Music Playlists**: Receive curated music playlists tailored to your current mood.
 
 ## Screenshots
 
-![Untitled ‑ Made with FlexClip (29)](https://github.com/user-attachments/assets/f735f11c-50e9-483a-8375-ee1c313fbe50)
+![image](https://github.com/user-attachments/assets/a03d0ece-9546-4c85-9e18-6930ce802f18)
+
 
 Try it!:https://stanleychueh.github.io/Moodify-Journal/
 ## Installation
@@ -36,7 +37,7 @@ Try it!:https://stanleychueh.github.io/Moodify-Journal/
   - **Speech-to-Text**: Click the microphone icon,and start speaking.
   - **Drawing**: Click the pen icon to open the drawing canvas and create a visual entry.
   - **Set Mood**: Use the mood slider to select your current mood, represented by emojis. The app will suggest a playlist based on your mood selection.
-  - **View Mood Analysis**: Check the right sidebar for anㄝ emoji-based summary of your mood trends over the last 14 days.
+  - **View Mood Analysis**: Check the right sidebar for an emoji-based summary of your mood trends over the last 14 days.
 
 ### Project Structure
 ## Project Structure
