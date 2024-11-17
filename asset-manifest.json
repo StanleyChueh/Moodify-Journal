@@ -1,24 +1,25 @@
 {
   "files": {
-    "main.css": "/Moodify-Journal/static/css/main.760c9375.chunk.css",
-    "main.js": "/Moodify-Journal/static/js/main.62bdc5b6.chunk.js",
-    "main.js.map": "/Moodify-Journal/static/js/main.62bdc5b6.chunk.js.map",
-    "runtime-main.js": "/Moodify-Journal/static/js/runtime-main.689aedf5.js",
-    "runtime-main.js.map": "/Moodify-Journal/static/js/runtime-main.689aedf5.js.map",
-    "static/js/2.f96b40ef.chunk.js": "/Moodify-Journal/static/js/2.f96b40ef.chunk.js",
-    "static/js/2.f96b40ef.chunk.js.map": "/Moodify-Journal/static/js/2.f96b40ef.chunk.js.map",
-    "static/js/3.bc7fa719.chunk.js": "/Moodify-Journal/static/js/3.bc7fa719.chunk.js",
-    "static/js/3.bc7fa719.chunk.js.map": "/Moodify-Journal/static/js/3.bc7fa719.chunk.js.map",
+    "main.css": "/Moodify-Journal/static/css/main.b18bbd12.chunk.css",
+    "main.js": "/Moodify-Journal/static/js/main.d92aeb0e.chunk.js",
+    "main.js.map": "/Moodify-Journal/static/js/main.d92aeb0e.chunk.js.map",
+    "runtime-main.js": "/Moodify-Journal/static/js/runtime-main.269bd7da.js",
+    "runtime-main.js.map": "/Moodify-Journal/static/js/runtime-main.269bd7da.js.map",
+    "static/js/2.2e06ee8f.chunk.js": "/Moodify-Journal/static/js/2.2e06ee8f.chunk.js",
+    "static/js/2.2e06ee8f.chunk.js.map": "/Moodify-Journal/static/js/2.2e06ee8f.chunk.js.map",
+    "static/js/3.320d766b.chunk.js": "/Moodify-Journal/static/js/3.320d766b.chunk.js",
+    "static/js/3.320d766b.chunk.js.map": "/Moodify-Journal/static/js/3.320d766b.chunk.js.map",
     "index.html": "/Moodify-Journal/index.html",
-    "precache-manifest.ddbedab00062d8b7453d350259efed94.js": "/Moodify-Journal/precache-manifest.ddbedab00062d8b7453d350259efed94.js",
+    "precache-manifest.2edf20d19330e8eb11a3a070ae994ba2.js": "/Moodify-Journal/precache-manifest.2edf20d19330e8eb11a3a070ae994ba2.js",
     "service-worker.js": "/Moodify-Journal/service-worker.js",
-    "static/css/main.760c9375.chunk.css.map": "/Moodify-Journal/static/css/main.760c9375.chunk.css.map",
-    "static/js/2.f96b40ef.chunk.js.LICENSE.txt": "/Moodify-Journal/static/js/2.f96b40ef.chunk.js.LICENSE.txt"
+    "static/css/main.b18bbd12.chunk.css.map": "/Moodify-Journal/static/css/main.b18bbd12.chunk.css.map",
+    "static/js/2.2e06ee8f.chunk.js.LICENSE.txt": "/Moodify-Journal/static/js/2.2e06ee8f.chunk.js.LICENSE.txt",
+    "static/media/cat.gif": "/Moodify-Journal/static/media/cat.8909de12.gif"
   },
   "entrypoints": [
-    "static/js/runtime-main.689aedf5.js",
-    "static/js/2.f96b40ef.chunk.js",
-    "static/css/main.760c9375.chunk.css",
-    "static/js/main.62bdc5b6.chunk.js"
+    "static/js/runtime-main.269bd7da.js",
+    "static/js/2.2e06ee8f.chunk.js",
+    "static/css/main.b18bbd12.chunk.css",
+    "static/js/main.d92aeb0e.chunk.js"
   ]
 }
