@@ -1,649 +1,659 @@
-/* Overall Layout */
-.app-layout {
-    display: flex;
-    height: 100vh;
-    background: linear-gradient(135deg, #fdfbfb, #f5ebe0); /* Warm gradient */
-    font-family: 'Poppins', sans-serif; /* Friendly font */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
 }
 
-/* Sidebar Styling */
+html, body {
+width: 100%;
+height: 100%;
+overflow-x: hidden; /* Prevent horizontal overflow */
+background: linear-gradient(135deg, #fdfbfb, #f5ebe0);
+}
+
+/* Overall Layout */
+.app-layout {
+display: flex;
+justify-content: center; /* Center horizontally */
+align-items: center; /* Center vertically */
+height: 100vh; /* Full viewport height */
+width: 100vw; /* Full viewport width */
+}
+
+/* Sidebar */
 .sidebar {
-    width: 200px;
-    background-color: #ff9f68;
-    padding: 20px;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: auto;
-    max-height: 100vh;
-    position: fixed;
-    /*border-radius: 0 10px 10px 0;*/
-    scrollbar-width: none;
+width: 200px;
+background-color: #ff9f68;
+position: fixed; /* Ensure it stays fixed without affecting the rest */
+top: 0;
+left: 0;
+bottom: 0;
+display: flex;
+flex-direction: column;
+align-items: center;
+overflow-y: auto;
+scrollbar-width: none; /* Hide scrollbar */
 }
 
 .sidebar::-webkit-scrollbar {
-    display: none;
+display: none;
 }
 
 .sidebar-title {
-    font-size: 1.6rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #fffde7;
+font-size: 1.6rem;
+font-weight: bold;
+margin-bottom: 20px;
+color: #fffde7;
 }
 
 .diary-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+list-style-type: none;
+padding: 0;
+margin: 0;
 }
 
 .diary-item {
-    font-size: 1rem;
-    margin: 8px 0;
-    cursor: pointer;
-    padding: 10px;
-    text-align: center;
-    background-color: #ffccbc;
-    border-radius: 8px;
-    color: #333;
-    transition: background-color 0.3s, transform 0.2s;
+font-size: 1rem;
+margin: 8px 0;
+cursor: pointer;
+padding: 10px;
+text-align: center;
+background-color: #ffccbc;
+border-radius: 8px;
+color: #333;
+transition: background-color 0.3s, transform 0.2s;
 }
 
 .diary-item.active {
-    background-color: #ff5722;
-    color: #fff;
-    font-weight: bold;
-    transform: scale(1.05);
+background-color: #ff5722;
+color: #fff;
+font-weight: bold;
+transform: scale(1.05);
 }
 
 .diary-item:hover {
-    background-color: #ff7043;
+background-color: #ff7043;
 }
 
 /* Main Content Styling */
 .main-content {
-    flex: 1;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-left: 240px; /* Leave space for the fixed sidebar */
-    background-color: #fffaf0;
-    border-radius: 10px;
+flex: 1;
+margin: 0 auto; /* Center horizontally */
+padding: 40px; /* Add padding around content */
+width: 80%; /* Limit the width to avoid stretching */
+display: flex; /* Enable flex for vertical centering */
+flex-direction: column;
+justify-content: center; /* Center vertically */
+align-items: center; /* Center content horizontally */
+margin-left: 220px; /* Move the content slightly to the right */
 }
 
+
 .main-title {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: #ff7043;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+font-size: 2rem;
+margin-bottom: 20px;
+color: #ff7043;
+text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Input Icons Styling */
 .input-icons {
-    display: flex;
-    gap: 10px;
-    margin: 15px 0;
+display: flex;
+gap: 10px;
+margin: 15px 0;
 }
 
 .input-icon {
-    font-size: 26px;
-    cursor: pointer;
-    color: #ffab91;
-    transition: color 0.3s, transform 0.2s;
+font-size: 26px;
+cursor: pointer;
+color: #ffab91;
+transition: color 0.3s, transform 0.2s;
 }
 
 .input-icon.active {
-    color: #ff5722; /* Highlight the active icon */
-    transform: scale(1.2);
+color: #ff5722; /* Highlight the active icon */
+transform: scale(1.2);
 }
 
 .input-icon:hover {
-    color: #ff7043;
+color: #ff7043;
 }
 
 /* Description Input Styling */
 .description-input {
-    width: 80%;
-    height: 100px;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 2px solid #ffab91;
-    border-radius: 12px;
-    font-size: 1rem;
-    outline: none;
-    resize: none;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    background-color: #fffaf0;
-    color: #333;
+width: 80%;
+height: 100px;
+padding: 15px;
+margin-bottom: 20px;
+border: 2px solid #ffab91;
+border-radius: 12px;
+font-size: 1rem;
+outline: none;
+resize: none;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+background-color: #fffaf0;
+color: #333;
 }
 
 .description-input:focus {
-    border-color: #ff5722;
-    box-shadow: 0 0 8px #ff7043;
+border-color: #ff5722;
+box-shadow: 0 0 8px #ff7043;
 }
 
 .button-container {
-    display: flex;
-    justify-content: space-evenly;
-    gap: 15px; /* Space between buttons */
-    margin: 20px 0; /* Adjust vertical spacing */
+display: flex;
+justify-content: space-evenly;
+gap: 15px; /* Space between buttons */
+margin: 20px 0; /* Adjust vertical spacing */
 }
 
 .button {
-    padding: 12px 20px; /* Consistent size */
-    border-radius: 15px; /* Rounded corners */
-    border: none; /* No border */
-    cursor: pointer;
-    font-size: 16px; /* Uniform font size */
-    color: white; /* Text color */
-    transition: all 0.3s ease; /* Smooth hover effect */
-    width: 100px; /* Ensure all buttons are the same width */
-    text-align: center; /* Center text */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+padding: 12px 20px; /* Consistent size */
+border-radius: 15px; /* Rounded corners */
+border: none; /* No border */
+cursor: pointer;
+font-size: 16px; /* Uniform font size */
+color: white; /* Text color */
+transition: all 0.3s ease; /* Smooth hover effect */
+width: 100px; /* Ensure all buttons are the same width */
+text-align: center; /* Center text */
+box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
 }
 
 .enter-button {
-    background-color: #ff7043;
-    /*color: white;*/
+background-color: #ff7043;
+/*color: white;*/
 }
 
 .enter-button:hover {
-    background-color: #ff5722;
-    transform: scale(1.05); 
+background-color: #ff5722;
+transform: scale(1.05); 
 }
 
 .clear-button {
-    background-color: #e57373;
-   /*transform: scale(1.05);*/ 
+background-color: #e57373;
+/*transform: scale(1.05);*/ 
 }
 
 .clear-button:hover {
-    background-color: #d32f2f;
-    transform: scale(1.05);
+background-color: #d32f2f;
+transform: scale(1.05);
 }
 
 .customize-playlist-button {
-    background-color: #e39ac2;
-    /*transform: scale(1.05);*/
+background-color: #e39ac2;
+/*transform: scale(1.05);*/
 }
-  
+
 .customize-playlist-button:hover {
-    background-color: #f5429b;
-    transform: scale(1.05);
+background-color: #f5429b;
+transform: scale(1.05);
 }
 
 .customize-image-button {
-    background-color: #ffa726; /* Yellowish color for Image */
-    border-radius: 15px;
+background-color: #ffa726; /* Yellowish color for Image */
+border-radius: 15px;
 }
 .customize-image-button:hover {
-    background-color: #fbc02d;
-    transform: scale(1.05);
+background-color: #fbc02d;
+transform: scale(1.05);
 }
 
 .button-container {
-    display: flex;
-    justify-content: space-evenly; /* Even spacing */
-    gap: 15px; /* Equal spacing between buttons */
-    margin: 20px 0; /* Vertical margin */
+display: flex;
+justify-content: space-evenly; /* Even spacing */
+gap: 15px; /* Equal spacing between buttons */
+margin: 20px 0; /* Vertical margin */
 }
 
 .button:hover {
-    transform: scale(1.05);
-    opacity: 0.9; /* Light fade effect */
+transform: scale(1.05);
+opacity: 0.9; /* Light fade effect */
 }
 
 /* Image Display Styling */
 .image-display {
-    width: 80%;
-    height: 300px;
-    border: 2px dashed #ffab91;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background-color: #fff;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+width: 80%;
+height: 300px;
+border: 2px dashed #ffab91;
+border-radius: 15px;
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+background-color: #fff;
+margin-bottom: 20px;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .generated-image {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 10px;
-    object-fit: cover;
+max-width: 100%;
+max-height: 100%;
+border-radius: 10px;
+object-fit: cover;
 }
 
 .placeholder {
-    font-size: 1.2rem;
-    color: #ff7043;
+font-size: 1.2rem;
+color: #ff7043;
 }
 
 /* Mood Slider Container */
 .mood-slider-container {
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
+width: 80%;
+display: flex;
+flex-direction: column;
+align-items: center;
+margin-top: 20px;
 }
 
 .mood-emojis {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 5px;
+display: flex;
+justify-content: space-between;
+width: 100%;
+margin-bottom: 5px;
 }
 
 .mood-emoji {
-    font-size: 1.5rem;
-    color: #ff7043;
+font-size: 1.5rem;
+color: #ff7043;
 }
 
 .mood-slider {
-    width: 100%;
-    height: 8px;
-    background: #ffccbc;
-    border-radius: 8px;
-    outline: none;
-    transition: background 0.3s;
+width: 100%;
+height: 8px;
+background: #ffccbc;
+border-radius: 8px;
+outline: none;
+transition: background 0.3s;
 }
 
 .mood-slider:hover {
-    background: #ffab91;
+background: #ffab91;
 }
 
 .mood-slider::-webkit-slider-thumb {
-    width: 20px;
-    height: 20px;
-    background: #ff7043;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+width: 20px;
+height: 20px;
+background: #ff7043;
+border-radius: 50%;
+cursor: pointer;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .mood-slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background: #ff7043;
-    border-radius: 50%;
-    cursor: pointer;
+width: 20px;
+height: 20px;
+background: #ff7043;
+border-radius: 50%;
+cursor: pointer;
 }
 
 /* Mood Analysis */
 .mood-analysis {
-    position: fixed;
-    bottom: 60px;
-    right: 20px;
-    width: 220px;
-    padding: 15px;
-    background-color: #ffe4e1;
-    border: 2px solid #ff7043;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    color: #333;
+position: fixed;
+bottom: 60px;
+right: 20px;
+width: 220px;
+padding: 15px;
+background-color: #ffe4e1;
+border: 2px solid #ff7043;
+border-radius: 12px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+text-align: center;
+color: #333;
 }
 
 .mood-analysis h3 {
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-    color: #ff7043;
+margin-bottom: 10px;
+font-size: 1.2rem;
+color: #ff7043;
 }
 
 .mood-analysis ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+list-style: none;
+padding: 0;
+margin: 0;
 }
 
 .mood-analysis li {
-    font-size: 1rem;
-    margin: 5px 0;
-    color: #555;
+font-size: 1rem;
+margin: 5px 0;
+color: #555;
 }
 
-/* Media Queries for Responsive Design */
 @media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-    }
+.app-layout {
+    flex-direction: column; /* Stack items vertically */
+    justify-content: flex-start; /* Align to the top */
+    align-items: center; /* Center horizontally */
+}
 
-    .main-content {
-        padding-left: 0;
-        padding: 20px;
-    }
-
-    .mood-analysis {
-        bottom: 10px;
-        right: 10px;
-        width: 180px;
-    }
+.main-content {
+    margin: 0 auto; /* Center the content */
+    width: 90%; /* Adjust width */
+    padding: 1ch; /* Reduce padding for smaller screens */
+}
 }
 
 
 /* Drawing Overlay Styling */
 .drawing-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: none; /* Initially hidden */
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.8);
+display: none; /* Initially hidden */
+align-items: center;
+justify-content: center;
+z-index: 2000;
 }
 
 .drawing-overlay.active {
-    display: flex; /* Show overlay when active */
-    overflow: hidden;
+display: flex; /* Show overlay when active */
+overflow: hidden;
 }
 
 .drawing-canvas {
-    background: white;
-    border: 2px solid #000;
-    width: 90%;
-    height: 90%;
-    max-width: 100%;
-    max-height: 100%;
-    box-sizing: border-box;
+background: white;
+border: 2px solid #000;
+width: 90%;
+height: 90%;
+max-width: 100%;
+max-height: 100%;
+box-sizing: border-box;
 }
 
 .close-drawing {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 16px;
-    padding: 12px 24px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 2001;
+position: absolute;
+top: 20px;
+right: 20px;
+font-size: 16px;
+padding: 12px 24px;
+background: #007bff;
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+z-index: 2001;
 }
 
 .language-modal {
-    background-color: #ffe4e3; /* Warm peach background */
-    border: 2px solid #ff7043; /* Warm orange border */
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    width: 300px; /* Adjust the width */
-    margin: 20px auto; /* Center the modal */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional shadow */
-    z-index: 3000; /* Ensure it appears above other elements */
-    position: fixed; /* Make it a true modal */
-    left: 54%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+background-color: #ffe4e3; /* Warm peach background */
+border: 2px solid #ff7043; /* Warm orange border */
+border-radius: 10px;
+padding: 20px;
+text-align: center;
+width: 300px; /* Adjust the width */
+margin: 20px auto; /* Center the modal */
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional shadow */
+z-index: 3000; /* Ensure it appears above other elements */
+position: fixed; /* Make it a true modal */
+left: 54%;
+top: 50%;
+transform: translate(-50%, -50%);
 }
 
 .language-modal h3 {
-    color: #ff7043; /* Warm orange for the title */
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    font-weight: bold; /* Make the title bold */
+color: #ff7043; /* Warm orange for the title */
+font-size: 1.5rem;
+margin-bottom: 15px;
+font-weight: bold; /* Make the title bold */
 }
 
 .language-modal button {
-    background-color: #ff7043; /* Warm orange for buttons */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 1rem;
-    border-radius: 8px; /* Rounded button corners */
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+background-color: #ff7043; /* Warm orange for buttons */
+color: white;
+border: none;
+padding: 10px 20px;
+margin: 10px;
+font-size: 1rem;
+border-radius: 8px; /* Rounded button corners */
+cursor: pointer;
+transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .language-modal button:hover {
-    background-color: #ff5722; /* Slightly darker orange on hover */
-    transform: scale(1.1); /* Add a slight zoom effect */
+background-color: #ff5722; /* Slightly darker orange on hover */
+transform: scale(1.1); /* Add a slight zoom effect */
 }
 
 .language-modal button:focus {
-    outline: none;
-    box-shadow: 0 0 5px #ff7043; /* Highlight button when focused */
+outline: none;
+box-shadow: 0 0 5px #ff7043; /* Highlight button when focused */
 }
 
 .playlist-modal {
-    position: fixed;
-    top: 50%;
-    left: 54%;
-    transform: translate(-50%, -50%);
-    background: #ffe4e3;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    z-index: 3000;
-    text-align: center;
-    width: 300px;
+position: fixed;
+top: 50%;
+left: 54%;
+transform: translate(-50%, -50%);
+background: #ffe4e3;
+padding: 20px;
+border-radius: 10px;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+z-index: 3000;
+text-align: center;
+width: 300px;
 }
-  
+
 /* For the YouTube link input field */
 .playlist-modal input[type="url"] {
-    width: 100%; /* Reduce width to 90% of the modal */
-    max-width: 400px; /* Set a maximum width */
-    padding: 8px; /* Add padding for better spacing */
-    border: 2px solid #ff7043; /* Adjust the border */
-    border-radius: 8px; /* Smooth corners */
-    margin: 10px 0; /* Add spacing above and below */
-    box-sizing: border-box; /* Ensure padding doesn't affect total width */
-  }
-  
-  .playlist-modal select {
-    margin: 10px 0;
-    padding: 10px;
-    width: 100%;
-    border: 1px solid #ff7043;
-    border-radius: 5px;
+width: 100%; /* Reduce width to 90% of the modal */
+max-width: 400px; /* Set a maximum width */
+padding: 8px; /* Add padding for better spacing */
+border: 2px solid #ff7043; /* Adjust the border */
+border-radius: 8px; /* Smooth corners */
+margin: 10px 0; /* Add spacing above and below */
+box-sizing: border-box; /* Ensure padding doesn't affect total width */
 }
-  
-  .playlist-modal button {
-    margin: 5px;
-    padding: 10px 20px;
-    background-color: #ff7043;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+
+.playlist-modal select {
+margin: 10px 0;
+padding: 10px;
+width: 100%;
+border: 1px solid #ff7043;
+border-radius: 5px;
+}
+
+.playlist-modal button {
+margin: 5px;
+padding: 10px 20px;
+background-color: #ff7043;
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
 }
 
 .image-upload-modal img {
-    max-width: 100%;
-    height: auto;
-    margin-top: 10px;
+max-width: 100%;
+height: auto;
+margin-top: 10px;
 }
-  
-  .image-upload-modal input {
-    margin: 10px 0;
+
+.image-upload-modal input {
+margin: 10px 0;
 }
 
 .button.customize-image-button {
-    background-color: #ffa726; /* Yellowish color for Image */
-    border-radius: 15px !important; /* Force rounded corners */
-    width: 100px; /* Ensure consistent width */
-    padding: 12px 20px; /* Consistent size */
-    text-align: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+background-color: #ffa726; /* Yellowish color for Image */
+border-radius: 15px !important; /* Force rounded corners */
+width: 100px; /* Ensure consistent width */
+padding: 12px 20px; /* Consistent size */
+text-align: center;
+box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
-  
+
 .button.customize-image-button:hover {
-    background-color: #fbc02d;
+background-color: #fbc02d;
 }
 
 .button:hover {
-    opacity: 0.8;
+opacity: 0.8;
 }
 
 .customize-image-button {
-    background-color: #ffa726; /* Color for Image */
+background-color: #ffa726; /* Color for Image */
 }
 
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(255, 112, 67, 0.15); /* Warm semi-transparent overlay */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+background: rgba(255, 112, 67, 0.15); /* Warm semi-transparent overlay */
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 1000;
 }
 
 .image-upload-modal {
-    background: linear-gradient(145deg, #fff5e6, #fff0e6); /* Warm gradient background */
-    border: 2px solid #ff9f68; /* Warmer orange border */
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 8px 24px rgba(255, 112, 67, 0.15); /* Warm shadow */
-    width: 420px;
-    max-width: 90%;
-    text-align: center;
-    font-family: 'Poppins', sans-serif;
-    position: fixed;
-    top: 50%; /* Centers the modal vertically */
-    left: 44%; /* Moves it to the left */
-    transform: translateY(-50%); /* Keeps vertical centering intact */
-    z-index: 1000;
+background: linear-gradient(145deg, #fff5e6, #fff0e6); /* Warm gradient background */
+border: 2px solid #ff9f68; /* Warmer orange border */
+border-radius: 20px;
+padding: 30px;
+box-shadow: 0 8px 24px rgba(255, 112, 67, 0.15); /* Warm shadow */
+width: 420px;
+max-width: 90%;
+text-align: center;
+font-family: 'Poppins', sans-serif;
+position: fixed;
+top: 50%; /* Centers the modal vertically */
+left: 44%; /* Moves it to the left */
+transform: translateY(-50%); /* Keeps vertical centering intact */
+z-index: 1000;
 }
 
 .image-upload-modal h3 {
-    font-size: 24px;
-    color: #ff7043; /* Warm orange text */
-    margin-bottom: 25px;
-    font-weight: 600;
+font-size: 24px;
+color: #ff7043; /* Warm orange text */
+margin-bottom: 25px;
+font-weight: 600;
 }
 
 .image-upload-modal label {
-    font-size: 16px;
-    color: #666;
-    display: block;
-    margin-bottom: 15px;
+font-size: 16px;
+color: #666;
+display: block;
+margin-bottom: 15px;
 }
 
 .image-upload-modal select {
-    width: 200px;
-    padding: 8px 12px;
-    border: 2px solid #ffccbc;
-    border-radius: 10px;
-    background-color: #fff;
-    color: #666;
-    margin-bottom: 15px;
+width: 200px;
+padding: 8px 12px;
+border: 2px solid #ffccbc;
+border-radius: 10px;
+background-color: #fff;
+color: #666;
+margin-bottom: 15px;
 }
 
 .image-upload-modal select:focus {
-    border-color: #ff9f68;
-    outline: none;
+border-color: #ff9f68;
+outline: none;
 }
 
 .modal-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 25px;
-    gap: 12px;
+display: flex;
+justify-content: space-between;
+margin-top: 25px;
+gap: 10px;
+flex-wrap: wrap;
 }
 
 .modal-buttons button {
-    flex: 1;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
-    transition: all 0.3s ease;
+flex: 1;
+padding: 12px 20px;
+border: none;
+border-radius: 12px;
+cursor: pointer;
+font-size: 15px;
+font-weight: 600;
+transition: all 0.3s ease;
 }
 
 .modal-buttons .save-button {
-    background: #ff9f68; /* Warm orange */
-    color: white;
+background: #ff9f68; /* Warm orange */
+color: rgb(0, 0, 0);
 }
 
 .modal-buttons .save-button:hover {
-    background: #ff7043;
-    transform: translateY(-2px);
+background: #ff7043;
+transform: translateY(-2px);
 }
 
 .modal-buttons .remove-button {
-    background: #ff8a80; /* Warm red */
-    color: white;
+background: #ff8a80; /* Warm red */
+color: rgb(0, 0, 0);
 }
 
 .modal-buttons .remove-button:hover {
-    background: #ff5252;
-    transform: translateY(-2px);
+background: #ff5252;
+transform: translateY(-2px);
 }
 
 .modal-buttons .reset-button {
-    background: #ffccbc; /* Light warm orange */
-    color: #666;
+background: #ffccbc; /* Light warm orange */
+color: #000000;
 }
 
 .modal-buttons .reset-button:hover {
-    background: #ffab91;
-    transform: translateY(-2px);
+background: #ffab91;
+transform: translateY(-2px);
 }
 
 .modal-buttons .cancel-button {
-    background: #fbe9e7; /* Very light warm orange */
-    color: #000000;
+background: #fbe9e7; /* Very light warm orange */
+color: #000000;
 }
 
 .modal-buttons .cancel-button:hover {
-    background: #ffccbc;
-    transform: translateY(-2px);
+background: #ffccbc;
+transform: translateY(-2px);
 }
 
 .uploaded-preview img {
-    max-width: 100%;
-    margin-top: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 16px rgba(255, 112, 67, 0.2); /* Warm shadow */
+max-width: 100%;
+margin-top: 20px;
+border-radius: 15px;
+box-shadow: 0 4px 16px rgba(255, 112, 67, 0.2); /* Warm shadow */
 }
 
 /* File input styling */
 .image-upload-modal input[type="file"] {
-    display: block;
-    width: 95%;
-    padding: 10px;
-    margin: 15px 0;
-    border: 2px dashed #ffccbc;
-    border-radius: 12px;
-    background: #fff9f5;
-    cursor: pointer;
+display: block;
+width: 95%;
+padding: 10px;
+margin: 15px 0;
+border: 2px dashed #ffccbc;
+border-radius: 12px;
+background: #fff9f5;
+cursor: pointer;
 }
 
 .image-upload-modal input[type="file"]:hover {
-    border-color: #ff9f68;
-    background: #fff5ee;
+border-color: #ff9f68;
+background: #fff5ee;
 }
 
 #remove-image-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-  }
-  
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.6);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 2000;
+}
+
 .modal-content {
 background: #fff5e6;
 padding: 20px;
@@ -684,17 +694,13 @@ cursor: pointer;
 }
 
 .cancel-button {
-    color: #000000; /* Set the desired font color (e.g., Tomato) */
-    background-color: transparent; /* Optional: Make the background transparent */
-    border: none; /* Optional: Remove the border */
-    font-weight: bold; /* Optional: Make the font bold */
-    cursor: pointer; /* Optional: Add pointer cursor */
-  }
-  
-  .cancel-button:hover {
-    color: #ff4500; /* Change color on hover (optional) */
-  }
-  
+color: #ffffff; /* Set the desired font color (e.g., Tomato) */
+background-color: transparent; /* Optional: Make the background transparent */
+border: none; /* Optional: Remove the border */
+font-weight: bold; /* Optional: Make the font bold */
+cursor: pointer; /* Optional: Add pointer cursor */
+}
+
 .music-toggle-button {
 position: absolute;
 top: 10px; /* Adjust this to fit your layout */
@@ -720,3 +726,68 @@ box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
 transform: scale(1.05);
 box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.cat-animation {
+position: fixed;
+top: 20px; /* Position it below the music button */
+right: 0px; /* Align with the music button */
+left: 2200px;
+display: flex;
+justify-content: center;
+align-items: center;
+width: auto;
+background: transparent; /* Remove any background color */
+}
+
+.cat-animation img {
+max-width: 300px; /* Limit size to fit the layout */
+height: auto;
+border-radius: 10px; /* Optional: Make the GIF corners rounded */
+/* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.cat {
+display: block; /* Ensure it's not hidden */
+width: auto;    /* Reset width if it's zero */
+height: auto;   /* Reset height if it's zero */
+}
+
+@keyframes run-across {
+from {
+left: 100%; /* Start off-screen on the right */
+}
+to {
+left: -100px; /* End off-screen on the left */
+}
+}
+
+@media (max-width: 768px) {
+.main-content {
+    margin: 0 auto; /* Center the content */
+    width: 90%; /* Adjust width */
+    padding: 10px; /* Reduce padding for smaller screens */
+}
+
+.music-toggle-button {
+    top: 10px;
+    right: 10px;
+}
+
+.cat-animation {
+    top: 60px;
+    right: 10px;
+}
+}
+
+.music-suggestion {
+    margin-top: 80px !important; /* Forces the style to apply */
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .music-thumbnail {
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px; /* Optional */
+  }
+  

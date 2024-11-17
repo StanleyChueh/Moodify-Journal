@@ -74,3 +74,14 @@
 button {
   font-family: 'Arial', sans-serif;
 }
+
+.music-suggestion {
+  margin-top: 20px; /* Adjust this value to move the thumbnail down */
+  text-align: center; /* Ensure it's centered */
+}
+
+.music-thumbnail {
+  display: block;
+  margin: 0 auto;
+  border-radius: 10px; /* Optional: Add rounded corners */
+}

@@ -4,6 +4,7 @@ import './App.css';
 import AlertModal from './AlertModal';
 import DrawingModal from './DrawingModal';
 import ReviewMemoriesModal from './ReviewMemoriesModal';
+import catGif from './cat.gif';
 
 // Constants
 const moodLabels = ["Anger", "Neutral", "Fear", "Sadness", "Surprise", "Happiness"];
@@ -520,6 +521,17 @@ function App() {
   }, []); // Run once on component mount
   
   useEffect(() => {
+    const cat = document.querySelector(".cat");
+    const adjustSpeed = () => {
+      cat.style.animationDuration = `${Math.random() * 3 + 3}s`; // Randomize speed
+    };
+    cat.addEventListener("animationiteration", adjustSpeed); // Change speed on each loop
+    return () => {
+      cat.removeEventListener("animationiteration", adjustSpeed);
+    };
+  }, []);  
+
+  useEffect(() => {
     // Save selected date
     localStorage.setItem('selectedDate', selectedDate);
   }, [selectedDate]);
@@ -878,18 +890,20 @@ function App() {
 
         {activeInputMode === 'typing' && (
           <textarea
-            className="description-input"
+            className="description-input" // Shared styling
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Write your description here..."
+            placeholder="How's your day?"
           />
         )}
 
         {activeInputMode === 'speech' && (
-          <div className="speech-result">
-            <h3>Speech-to-Text Result</h3>
-            <p>{speechResult}</p>
-          </div>
+          <textarea
+            className="description-input" // Shared styling
+            value={speechResult}
+            readOnly // Read-only since it's updated dynamically
+            placeholder="Speech-to-text result..."
+          />
         )}
 
         <div className="button-container">
@@ -927,7 +941,7 @@ function App() {
           {imageUrl ? (
             <img src={imageUrl} alt="Mood" className="generated-image" />
           ) : (
-            <div className="placeholder">Your image will appear here</div>
+            <div className="placeholder">images for your mood</div>
           )}
         </div>
 
@@ -951,7 +965,6 @@ function App() {
 
         {selectedMusic && (
           <div className="music-suggestion">
-            <h3>Suggested Playlist:</h3>
             <a href={selectedMusic.playlistUrl} target="_blank" rel="noopener noreferrer">
               <img
                 src={`https://img.youtube.com/vi/${getYouTubeVideoId(selectedMusic.playlistUrl)}/hqdefault.jpg`}
@@ -1063,6 +1076,9 @@ function App() {
       </div>
 
       <div id="background-music-player"></div>
+      <div className="cat-animation">
+        <img src={catGif} alt="Running Cat" className="cat" />
+      </div>
     </div>
 
   );
