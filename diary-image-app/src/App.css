@@ -695,3 +695,28 @@ cursor: pointer;
     color: #ff4500; /* Change color on hover (optional) */
   }
   
+.music-toggle-button {
+position: absolute;
+top: 10px; /* Adjust this to fit your layout */
+right: 10px; /* Adjust to align with your design */
+background: linear-gradient(90deg, #FFD700, #FFA500);
+border: none;
+color: #fff;
+font-size: 16px;
+font-weight: bold;
+border-radius: 20px;
+padding: 10px 20px;
+cursor: pointer;
+transition: transform 0.2s, box-shadow 0.2s;
+box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.music-toggle-button:hover {
+transform: scale(1.1);
+box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.music-toggle-button:active {
+transform: scale(1.05);
+box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}

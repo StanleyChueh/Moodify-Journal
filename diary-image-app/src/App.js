@@ -35,6 +35,8 @@ function ImageUploadModal({
   setSelectedMoodForImage,
   uploadedImage, // Receive uploadedImage as a prop
   setUploadedImage, // Receive setUploadedImage as a prop
+  selectedMoodForPlaylist, // Add here
+  setSelectedMoodForPlaylist, // Add here
 }) {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -54,11 +56,12 @@ function ImageUploadModal({
       <div className="image-upload-modal yellow-theme">
         <h3>Upload Image for Mood</h3>
         <label>
-          Select Mood:
+          Select Option:
           <select
-            value={selectedMoodForImage}
-            onChange={(e) => setSelectedMoodForImage(e.target.value)}
+            value={selectedMoodForPlaylist}
+            onChange={(e) => setSelectedMoodForPlaylist(e.target.value)}
           >
+            <option value="Background Music">Background Music</option>
             {moodLabels.map((mood) => (
               <option key={mood} value={mood}>
                 {mood}
@@ -167,11 +170,12 @@ function PlaylistModal({
     <div className="playlist-modal">
       <h3>Customize Playlist</h3>
       <label>
-        Select Mood:
+        Select Option:
         <select
           value={selectedMoodForPlaylist}
           onChange={(e) => setSelectedMoodForPlaylist(e.target.value)}
         >
+          <option value="Background Music">Background Music</option> {/* Add this */}
           {moodLabels.map((mood) => (
             <option key={mood} value={mood}>
               {mood}
@@ -228,8 +232,9 @@ function App() {
   const [isRemoveImageModalOpen, setIsRemoveImageModalOpen] = useState(false);
   const [moodToRemoveImages, setMoodToRemoveImages] = useState("Anger");
   const [uploadedImage, setUploadedImage] = useState(null);
-
-
+  const [backgroundMusic, setBackgroundMusic] = useState("https://youtu.be/CFGLoQIhmow?si=SQ5DQVCCAmKdOt3K"); // Default YouTube link
+  const [isBackgroundMusicPlaying, setIsBackgroundMusicPlaying] = useState(false); // Tracks music playback
+  const [youtubePlayer, setYoutubePlayer] = useState(null); // Reference to YouTube IFrame player
   const [customMoodImages, setCustomMoodImages] = useState({
     Anger: [],
     Neutral: [],
@@ -239,26 +244,49 @@ function App() {
     Happiness: [],
   });  
 
+  const toggleBackgroundMusic = () => {
+    if (!youtubePlayer) return;
+  
+    if (isBackgroundMusicPlaying) {
+      youtubePlayer.pauseVideo(); // Pause music
+    } else {
+      youtubePlayer.playVideo(); // Play music
+    }
+    setIsBackgroundMusicPlaying(!isBackgroundMusicPlaying); // Toggle playback state
+  };  
+
   const handleSaveCustomImage = (mood, image) => {
+    if (!image) {
+      alert("No image selected. Please upload an image before saving.");
+      return; // Exit early if no image is provided
+    }
+  
+    // Update the custom mood images state
     setCustomMoodImages((prevImages) => ({
       ...prevImages,
       [mood]: [...(prevImages[mood] || []), image], // Add the new image to the existing list
     }));
   
-    // Save to LocalStorage for persistence
-    localStorage.setItem(
-      "customMoodImages",
-      JSON.stringify({
+    // Save the updated images to LocalStorage for persistence
+    try {
+      const updatedImages = {
         ...customMoodImages,
         [mood]: [...(customMoodImages[mood] || []), image],
-      })
-    );
+      };
+      localStorage.setItem("customMoodImages", JSON.stringify(updatedImages));
+    } catch (error) {
+      console.error("Error saving image to localStorage:", error);
+      alert("An error occurred while saving the image. Please try again.");
+      return; // Exit if an error occurs
+    }
   
     // Reset the uploaded image preview
     setUploadedImage(null);
   
     // Close the modal
     setIsImageUploadModalOpen(false);
+  
+    alert(`Image for mood "${mood}" saved successfully!`);
   };  
 
   const [customPlaylists, setCustomPlaylists] = useState({
@@ -271,12 +299,24 @@ function App() {
   });  
 
   const handleSaveCustomPlaylist = (mood, link) => {
-    setCustomPlaylists((prevPlaylists) => ({
-      ...prevPlaylists,
-      [mood]: link,
-    }));
-    setIsPlaylistModalOpen(false);
-    setYoutubeLink("");
+    if (mood === "Background Music") {
+      setBackgroundMusic(link); // Update the background music
+      localStorage.setItem("backgroundMusic", link); // Save to LocalStorage for persistence
+    } else {
+      setCustomPlaylists((prevPlaylists) => ({
+        ...prevPlaylists,
+        [mood]: link,
+      }));
+      localStorage.setItem(
+        "customPlaylists",
+        JSON.stringify({
+          ...customPlaylists,
+          [mood]: link,
+        })
+      );
+    }
+    setIsPlaylistModalOpen(false); // Close modal
+    setYoutubeLink(""); // Clear input
   };  
 
   const checkForGoodMemories = useCallback(() => {
@@ -370,6 +410,38 @@ function App() {
       setLastModalShowDate(new Date());
     }
   }, [dateList, diaryEntries, lastModalShowDate]);
+
+  useEffect(() => {
+    // Load YouTube iframe API
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName("script")[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  
+    // Initialize YouTube player
+    window.onYouTubeIframeAPIReady = () => {
+      const player = new window.YT.Player("background-music-player", {
+        height: "0", // Hidden
+        width: "0",  // Hidden
+        videoId: getYouTubeVideoId(backgroundMusic), // Load default or custom background music
+        events: {
+          onReady: (event) => setYoutubePlayer(event.target), // Save player instance
+        },
+      });
+    };
+  
+    // Update YouTube player when `backgroundMusic` changes
+    if (youtubePlayer && backgroundMusic) {
+      youtubePlayer.loadVideoById(getYouTubeVideoId(backgroundMusic)); // Load new video ID
+    }
+  }, [backgroundMusic, youtubePlayer]); // Dependencies: `backgroundMusic` and `youtubePlayer`
+  
+  useEffect(() => {
+    const savedBackgroundMusic = localStorage.getItem("backgroundMusic");
+    if (savedBackgroundMusic) {
+      setBackgroundMusic(savedBackgroundMusic); // Load saved background music
+    }
+  }, []);  
 
   useEffect(() => {
     updateMoodAnalysis();
@@ -941,6 +1013,8 @@ function App() {
         setSelectedMoodForImage={setSelectedMoodForImage}
         uploadedImage={uploadedImage} // Pass uploadedImage as a prop
         setUploadedImage={setUploadedImage} // Pass setUploadedImage as a prop
+        selectedMoodForPlaylist={selectedMoodForPlaylist} // Pass as prop
+        setSelectedMoodForPlaylist={setSelectedMoodForPlaylist} // Pass as prop
       />
 
       {isRemoveImageModalOpen && (
@@ -977,6 +1051,18 @@ function App() {
           </div>
         </div>
       )}
+
+      <div className="top-right-controls">
+        <button onClick={toggleBackgroundMusic} className="music-toggle-button">
+          {isBackgroundMusicPlaying ? (
+            <span>🎵 Pause Music</span>
+          ) : (
+            <span>🎶 Play Music</span>
+          )}
+        </button>
+      </div>
+
+      <div id="background-music-player"></div>
     </div>
 
   );
