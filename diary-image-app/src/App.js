@@ -5,6 +5,7 @@ import AlertModal from './AlertModal';
 import DrawingModal from './DrawingModal';
 import ReviewMemoriesModal from './ReviewMemoriesModal';
 import catGif from './cat.gif';
+import PatrickStar from './spongebob-patrick-star.gif'
 
 // Constants
 const moodLabels = ["Anger", "Neutral", "Fear", "Sadness", "Surprise", "Happiness"];
@@ -59,8 +60,8 @@ function ImageUploadModal({
         <label>
           Select Option:
           <select
-            value={selectedMoodForPlaylist}
-            onChange={(e) => setSelectedMoodForPlaylist(e.target.value)}
+            value={selectedMoodForImage} // Use the correct state
+            onChange={(e) => setSelectedMoodForImage(e.target.value)} // Update selectedMoodForImage
           >
             {moodLabels.map((mood) => (
               <option key={mood} value={mood}>
@@ -69,6 +70,7 @@ function ImageUploadModal({
             ))}
           </select>
         </label>
+
         <input type="file" accept="image/*" onChange={handleImageChange} />
         {uploadedImage && (
           <div className="uploaded-preview">
@@ -79,8 +81,11 @@ function ImageUploadModal({
           <button className="button save-button" onClick={() => onSave(selectedMoodForImage, uploadedImage)}>
             Save
           </button>
-          <button className="button remove-button" onClick={() => onRemoveImage(selectedMoodForImage)}>
-            Remove
+          <button
+              className="button remove-button"
+              onClick={() => onRemoveImage(selectedMoodForImage)} // Uses the correct prop
+          >
+              Remove
           </button>
           <button className="button reset-button" onClick={onResetToDefault}>
             Default
@@ -96,27 +101,28 @@ function ImageUploadModal({
 
 function getRandomImageForMood(moodValue, customMoodImages) {
   const moodIndex = Math.min(
-    Math.floor((moodValue / 100) * moodLabels.length),
-    moodLabels.length - 1 // Stay within bounds
+      Math.floor((moodValue / 100) * moodLabels.length),
+      moodLabels.length - 1
   );
   const moodLabel = moodLabels[moodIndex];
+  console.log("Mood label:", moodLabel); // Debug log
 
-  // Get custom images for this mood
   const customImages = customMoodImages[moodLabel] || [];
-
-  // Add folder-based images for this mood
   const folderImages = Array.from(
-    { length: imageCounts[moodLabel] || 0 },
-    (_, index) =>
-      `${process.env.PUBLIC_URL}/${imageDirectories[moodLabel]}/image${index + 1}.jpg`
+      { length: imageCounts[moodLabel] || 0 },
+      (_, index) =>
+          `${process.env.PUBLIC_URL}/${imageDirectories[moodLabel]}/image${index + 1}.jpg`
   );
 
-  // Combine custom and folder-based images
   const allImages = [...customImages, ...folderImages];
+  console.log("Available images:", allImages); // Debug log
 
-  // Pick a random image
+  if (allImages.length === 0) return null;
+
   const randomIndex = Math.floor(Math.random() * allImages.length);
-  return allImages[randomIndex];
+  const selectedImage = allImages[randomIndex];
+  console.log("Selected image:", selectedImage); // Debug log
+  return selectedImage;
 }
 
 // Define the function to get YouTube video ID
@@ -237,6 +243,10 @@ function App() {
   const [isFAQModalOpen, setIsFAQModalOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [popupImage, setPopupImage] = useState(null);
+  const [isRewardPopupOpen, setIsRewardPopupOpen] = useState(false); // Tracks reward pop-up visibility
+  const [userPoints, setUserPoints] = useState(0); // Tracks user points
+  const [isPointPopupOpen, setIsPointPopupOpen] = useState(false); // Controls point card pop-up visibility
+  const [checkedDays, setCheckedDays] = useState(new Set()); // Tracks days with points already awarded
   const [youtubePlayer, setYoutubePlayer] = useState(null); // Reference to YouTube IFrame player
   const [customMoodImages, setCustomMoodImages] = useState({
     Anger: [],
@@ -322,6 +332,28 @@ function App() {
     setYoutubeLink(""); // Clear input
   };  
 
+  const LoyaltyCard = ({ userPoints }) => {
+    const totalPoints = 10; // Total points on the loyalty card
+    const filledPoints = Math.min(userPoints, totalPoints); // Prevent overflow of points
+
+    return (
+        <div className="loyalty-card">
+            <h3>Loyalty Card</h3>
+            <div className="points-grid">
+                {Array.from({ length: totalPoints }, (_, index) => (
+                    <div
+                        key={index}
+                        className={`point ${index < filledPoints ? "filled" : ""}`}
+                    >
+                        {index === totalPoints - 1 ? "FREE" : ""}
+                    </div>
+                ))}
+            </div>
+            <p>Earn 10 points and get a reward!</p>
+        </div>
+    );
+};
+
   const checkForGoodMemories = useCallback(() => {
     const last14Days = dateList.slice(0, 14);
     const foundHappyDays = last14Days.filter((date) => {
@@ -332,17 +364,30 @@ function App() {
   }, [dateList, diaryEntries]);
   
   const handleMoodChange = (newMood) => {
+    // Update the mood state
     setMood((prevMood) => {
       if (newMood === 100 && prevMood === 100) {
-        return 99.9; // Temporarily change the state to force a re-render
+        return 99.9; // Temporarily change the state to force a re-render if needed
       }
       return newMood;
-    });  
+    });
+  
+    // Update the mood for the selected date in diaryEntries
+    setDiaryEntries((prevEntries) => ({
+      ...prevEntries,
+      [selectedDate]: {
+        ...prevEntries[selectedDate],
+        mood: newMood,
+      },
+    }));
   
     // Check if the newMood corresponds to "fear" (34-50) or "sadness" (51-67)
     if ((newMood >= 34 && newMood <= 50) || (newMood >= 51 && newMood <= 67)) {
       // Check for past happy memories when selecting fear or sadness
-      const last14Days = dateList.slice(0, 14);
+      const last14Days = dateList
+        .slice(0, 14)
+        .sort((a, b) => new Date(b) - new Date(a)); // Ensure dates are sorted
+  
       const foundHappyDays = last14Days.filter((date) => {
         const entry = diaryEntries[date];
         return entry && entry.mood >= 85; // Check if the mood is "happy"
@@ -357,7 +402,8 @@ function App() {
     } else {
       setIsReviewModalOpen(false); // Ensure the modal is closed for other mood selections
     }
-  };  
+  };
+  
   
   const handleLanguageSelect = (languageCode) => {
     //setSelectedLanguage(languageCode);
@@ -371,9 +417,34 @@ function App() {
   };
 
   const handleSelectDate = (date) => {
+    // Save the current day's data before switching
+    setDiaryEntries((prevEntries) => ({
+        ...prevEntries,
+        [selectedDate]: {
+            ...prevEntries[selectedDate],
+            description: prompt,
+            mood: mood,
+            imageUrl: imageUrl,
+            drawing: savedDrawing,
+            speechResult: speechResult,
+        },
+    }));
+
+    // Set the selected date
     setSelectedDate(date);
+
+    // Update the state with data from the selected date
+    const entry = diaryEntries[date];
+    setPrompt(entry?.description || '');
+    setMood(entry?.mood || 25); // Default mood to 25 if none is saved
+    setImageUrl(entry?.imageUrl || null);
+    setSavedDrawing(entry?.drawing || null);
+    setSpeechResult(entry?.speechResult || '');
+
+    // Close the review memories modal after navigating to the selected date
     setIsReviewModalOpen(false);
   };
+
 
   useEffect(() => {
     if ((mood >= 34 && mood <= 50) || (mood >= 51 && mood <= 67)) {
@@ -623,11 +694,40 @@ function App() {
   };
 
   const handleEnter = () => {
+    // Check if the selected day already received a point
+    if (!checkedDays.has(selectedDate)) {
+        setUserPoints((prevPoints) => {
+            const newPoints = prevPoints + 1;
+
+            // Show reward and reset points when reaching every 5 points
+            if (newPoints % 6 === 0) {
+                setTimeout(() => {
+                    setIsRewardPopupOpen(true); // Show reward pop-up
+                }, ); // Small delay for better user experience
+
+                // Reset points back to 0 for the next round
+                return 0;
+            }
+
+            return newPoints;
+        });
+
+        // Mark the day as checked
+        setCheckedDays((prevCheckedDays) => new Set(prevCheckedDays).add(selectedDate));
+
+        // Show the point card pop-up
+        setIsPointPopupOpen(true);
+    } else {
+        alert("You have already checked your point for this day!");
+    }
+
+    // Handle mood image pop-up
     const image = getRandomImageForMood(mood, customMoodImages); // Get image based on mood
     setImageUrl(image); // Save the image URL for the diary entry
     setPopupImage(image); // Set the image for the pop-up
     setIsImagePopupOpen(true); // Open the pop-up modal
 
+    // Handle speech input mode
     if (activeInputMode === 'speech') {
         if (isRecording) {
             stopSpeechRecognition();
@@ -644,19 +744,21 @@ function App() {
             alert('Recording started...');
         }
     } else {
+        // Update diary entry with text input mode
         setDiaryEntries((prevEntries) => ({
             ...prevEntries,
             [selectedDate]: {
                 description: prompt,
-                mood: mood,
+                mood: mood, // Update mood in the diary entry
                 imageUrl: image,
                 speechResult: speechResult,
             },
         }));
         // No need for a separate alert since the modal will indicate success
     }
-};
-  
+  };
+
+
 
   const handleInputModeChange = (mode) => {
     setActiveInputMode(mode);
@@ -836,16 +938,16 @@ function App() {
   const handleRemoveImage = (mood) => {
     setMoodToRemoveImages(mood); // Set the selected mood
     setIsRemoveImageModalOpen(true); // Open the Remove Image modal
-  
-    // Update LocalStorage (if needed)
+
+    // Update LocalStorage if necessary
     localStorage.setItem(
-      "customMoodImages",
-      JSON.stringify({
-        ...customMoodImages,
-        [mood]: null,
-      })
+        "customMoodImages",
+        JSON.stringify({
+            ...customMoodImages,
+            [mood]: null,
+        })
     );
-  };  
+};
 
   const handleResetToDefault = () => {
     const confirmed = window.confirm("Are you sure you want to reset all custom images?");
@@ -865,6 +967,7 @@ function App() {
     localStorage.removeItem("customMoodImages");
   };  
 
+  
   const handleReviewMemories = () => {
     const last14Days = dateList.slice(0, 14);
     const happyDays = last14Days.filter(date => {
@@ -1075,38 +1178,38 @@ function App() {
       />
 
       {isRemoveImageModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Select Image to Remove for {moodToRemoveImages}</h3>
-            <div className="image-grid">
-              {[
-                // Combine custom images and hardcoded images
-                ...(customMoodImages[moodToRemoveImages] || []),
-                ...Array.from(
-                  { length: imageCounts[moodToRemoveImages] || 0 },
-                  (_, index) =>
-                    `${process.env.PUBLIC_URL}/${imageDirectories[moodToRemoveImages]}/image${index + 1}.jpg`
-                ),
-              ].map((image, index) => (
-                <div key={index} className="image-item">
-                  <img src={image} alt={`Image ${index + 1}`} />
+          <div className="modal-overlay">
+              <div className="modal-content">
+                  <h3>Select Image to Remove for {moodToRemoveImages}</h3>
+                  <div className="image-grid">
+                      {[
+                          // Combine custom images and hardcoded images for the selected mood
+                          ...(customMoodImages[moodToRemoveImages] || []),
+                          ...Array.from(
+                              { length: imageCounts[moodToRemoveImages] || 0 },
+                              (_, index) =>
+                                  `${process.env.PUBLIC_URL}/${imageDirectories[moodToRemoveImages]}/image${index + 1}.jpg`
+                          ),
+                      ].map((image, index) => (
+                          <div key={index} className="image-item">
+                              <img src={image} alt={`Image ${index + 1}`} />
+                              <button
+                                  className="remove-btn"
+                                  onClick={() => confirmRemoveImage(moodToRemoveImages, index)}
+                              >
+                                  Remove
+                              </button>
+                          </div>
+                      ))}
+                  </div>
                   <button
-                    className="remove-btn"
-                    onClick={() => confirmRemoveImage(moodToRemoveImages, index)}
+                      className="button cancel-button"
+                      onClick={() => setIsRemoveImageModalOpen(false)}
                   >
-                    Remove
+                      Cancel
                   </button>
-                </div>
-              ))}
-            </div>
-            <button
-              className="button cancel-button"
-              onClick={() => setIsRemoveImageModalOpen(false)}
-            >
-              Cancel
-            </button>
+              </div>
           </div>
-        </div>
       )}
 
       <div className="top-right-controls">
@@ -1185,11 +1288,39 @@ function App() {
           </div>
         </div>
       )}
-
       {isImagePopupOpen && (
           <div className="popup">
               <div className="popup-content">
-                  <img src={popupImage} alt="Mood Representation" className="generated-image" />
+                  {/* Mood Representation Section */}
+                  {popupImage ? (
+                      <>
+                          <img src={popupImage} alt="Mood Representation" className="generated-image" />
+                      </>
+                  ) : (
+                      <p>No image available for this mood</p>
+                  )}
+
+                  {/* Loyalty Card Section */}
+                  <div className="point-card">
+                      <h4>Points Earned</h4>
+                      <p>You have earned <strong>1 point</strong> for today's entry!</p>
+                      <p>Total Points: <strong>{userPoints}</strong></p>
+
+                      {/* Reward Message when reaching 5 points */}
+                      {userPoints === 5 && (
+                          <div className="reward-message">
+                              <h4>🎉 Congratulations! 🎉</h4>
+                              <p>You’ve reached 5 points!</p>
+                              <img
+                                  src={PatrickStar} // Use the imported GIF here
+                                  alt="Reward"
+                                  className="reward-gif"
+                              />
+                          </div>
+                      )}
+                  </div>
+
+                  {/* Close Button */}
                   <button
                       className="button cancel-button"
                       onClick={() => setIsImagePopupOpen(false)}
@@ -1199,6 +1330,7 @@ function App() {
               </div>
           </div>
       )}
+
     </div>
 
   );

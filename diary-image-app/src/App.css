@@ -979,68 +979,96 @@
         font-size: 0.95rem;
       }
     }
-
-/* General Pop-Up Styling */
-.popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.4); /* Soft dark overlay */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px); /* Adds a soft blur effect */
-}
-
-/* Pop-Up Content Box */
-.popup-content {
-  background: #fff8e8; /* Warm, light beige color */
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-  text-align: center;
-  max-width: 600px;
-  width: 90%; /* Responsive width */
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-/* Pop-Up Image Styling */
-.generated-image {
-  max-width: 100%;
-  max-height: 70vh;
-  border-radius: 15px; /* Rounded edges for the image */
-  margin-bottom: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle image shadow */
-}
-
-/* Close Button */
-.button.cancel-button {
-  padding: 10px 20px;
-  background-color: #ffa726; /* Warm orange */
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.button.cancel-button:hover {
-  background-color: #ff9800; /* Slightly darker orange on hover */
-}
-
-/* Fade-In Animation */
-@keyframes fadeIn {
-  from {
-      opacity: 0;
-      transform: scale(0.9);
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4); /* Dark background with transparency */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(5px); /* Adds a subtle blur effect */
   }
-  to {
-      opacity: 1;
-      transform: scale(1);
+  
+  .popup-content {
+      background: #fff8e8; /* Warm beige background */
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      animation: fadeIn 0.3s ease-in-out;
   }
-}
+  
+  .generated-image {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .point-card {
+      background: #f9fbe7;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+  }
+  
+  .point-card h4 {
+      font-size: 18px;
+      color: #6a1b9a; /* Purple for the loyalty card section */
+      margin-bottom: 10px;
+  }
+  
+  .reward-message {
+      background: #e3f2fd;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+  }
+  
+  .reward-gif {
+      max-width: 100%;
+      height: auto;
+      margin-top: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .button.cancel-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ffa726;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+  }
+  
+  .button.cancel-button:hover {
+      background-color: #ff9800;
+  }
+  
+  @keyframes fadeIn {
+      from {
+          opacity: 0;
+          transform: scale(0.9);
+      }
+      to {
+          opacity: 1;
+          transform: scale(1);
+      }
+  }
+  
