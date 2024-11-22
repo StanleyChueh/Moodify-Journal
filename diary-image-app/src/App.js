@@ -62,7 +62,6 @@ function ImageUploadModal({
             value={selectedMoodForPlaylist}
             onChange={(e) => setSelectedMoodForPlaylist(e.target.value)}
           >
-            <option value="Background Music">Background Music</option>
             {moodLabels.map((mood) => (
               <option key={mood} value={mood}>
                 {mood}
@@ -236,6 +235,8 @@ function App() {
   const [backgroundMusic, setBackgroundMusic] = useState("https://youtu.be/CFGLoQIhmow?si=SQ5DQVCCAmKdOt3K"); // Default YouTube link
   const [isBackgroundMusicPlaying, setIsBackgroundMusicPlaying] = useState(false); // Tracks music playback
   const [isFAQModalOpen, setIsFAQModalOpen] = useState(false);
+  const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+  const [popupImage, setPopupImage] = useState(null);
   const [youtubePlayer, setYoutubePlayer] = useState(null); // Reference to YouTube IFrame player
   const [customMoodImages, setCustomMoodImages] = useState({
     Anger: [],
@@ -331,7 +332,12 @@ function App() {
   }, [dateList, diaryEntries]);
   
   const handleMoodChange = (newMood) => {
-    setMood(newMood);
+    setMood((prevMood) => {
+      if (newMood === 100 && prevMood === 100) {
+        return 99.9; // Temporarily change the state to force a re-render
+      }
+      return newMood;
+    });  
   
     // Check if the newMood corresponds to "fear" (34-50) or "sadness" (51-67)
     if ((newMood >= 34 && newMood <= 50) || (newMood >= 51 && newMood <= 67)) {
@@ -617,39 +623,39 @@ function App() {
   };
 
   const handleEnter = () => {
-    const image = getRandomImageForMood(mood, customMoodImages);
-    setImageUrl(image);
+    const image = getRandomImageForMood(mood, customMoodImages); // Get image based on mood
+    setImageUrl(image); // Save the image URL for the diary entry
+    setPopupImage(image); // Set the image for the pop-up
+    setIsImagePopupOpen(true); // Open the pop-up modal
+
     if (activeInputMode === 'speech') {
-      if (isRecording) {
-        stopSpeechRecognition();
-        setDiaryEntries((prevEntries) => ({
-          ...prevEntries,
-          [selectedDate]: {
-            ...prevEntries[selectedDate],
-            speechResult: speechResult, // Save speech result for the selected date
-          },
-        }));
-        alert('Recording stopped and entry saved successfully!');
-      } else {
-        startSpeechRecognition();
-        alert('Recording started...');
-      }
+        if (isRecording) {
+            stopSpeechRecognition();
+            setDiaryEntries((prevEntries) => ({
+                ...prevEntries,
+                [selectedDate]: {
+                    ...prevEntries[selectedDate],
+                    speechResult: speechResult, // Save speech result for the selected date
+                },
+            }));
+            alert('Recording stopped and entry saved successfully!');
+        } else {
+            startSpeechRecognition();
+            alert('Recording started...');
+        }
     } else {
-      const image = getRandomImageForMood(mood, customMoodImages); // Pass customMoodImages
-      setImageUrl(image);
-  
-      setDiaryEntries((prevEntries) => ({
-        ...prevEntries,
-        [selectedDate]: {
-          description: prompt,
-          mood: mood,
-          imageUrl: image,
-          speechResult: speechResult,
-        },
-      }));
-      alert('Entry saved successfully!');
+        setDiaryEntries((prevEntries) => ({
+            ...prevEntries,
+            [selectedDate]: {
+                description: prompt,
+                mood: mood,
+                imageUrl: image,
+                speechResult: speechResult,
+            },
+        }));
+        // No need for a separate alert since the modal will indicate success
     }
-  };
+};
   
 
   const handleInputModeChange = (mode) => {
@@ -888,17 +894,19 @@ function App() {
     <div className="app-layout">
       <div className="sidebar">
         <h2 className="sidebar-title">Diary AI</h2>
-        <ul className="diary-list">
-          {dateList.map((date, index) => (
-            <li
-              key={date}
-              className={`diary-item ${date === selectedDate ? 'active' : ''}`}
-              onClick={() => handleDateClick(date)}
-            >
-              {index === 0 ? 'Today' : date}
-            </li>
-          ))}
-        </ul>
+        <div className="diary-list-container">
+          <ul className="diary-list">
+            {dateList.map((date, index) => (
+              <li
+                key={date}
+                className={`diary-item ${date === selectedDate ? 'active' : ''}`}
+                onClick={() => handleDateClick(date)}
+              >
+                {index === 0 ? 'Today' : date}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <div className="main-content">
@@ -980,18 +988,6 @@ function App() {
           youtubeLink={youtubeLink}
           setYoutubeLink={setYoutubeLink}
         />
-
-        <div className="image-display">
-          {imageUrl ? (
-            <img
-              src={imageUrl}
-              alt="Mood"
-              className="generated-image"
-            />
-          ) : (
-            <div className="placeholder">images for your mood</div>
-          )}
-        </div>
 
         <div className="mood-slider-container">
           <div className="mood-emojis">
@@ -1128,7 +1124,6 @@ function App() {
         <img src={catGif} alt="Running Cat" className="cat" />
       </div>
       
-      
       {isFAQModalOpen && (
         <div className="modal-overlay">
           <div className="faq-modal">
@@ -1191,7 +1186,19 @@ function App() {
         </div>
       )}
 
-
+      {isImagePopupOpen && (
+          <div className="popup">
+              <div className="popup-content">
+                  <img src={popupImage} alt="Mood Representation" className="generated-image" />
+                  <button
+                      className="button cancel-button"
+                      onClick={() => setIsImagePopupOpen(false)}
+                  >
+                      Close
+                  </button>
+              </div>
+          </div>
+      )}
     </div>
 
   );

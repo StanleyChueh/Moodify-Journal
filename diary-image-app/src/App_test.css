@@ -5,11 +5,14 @@
   }
   
   html, body {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden; /* Prevent horizontal overflow */
-  background: linear-gradient(135deg, #fdfbfb, #f5ebe0);
+    width: 100%;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #fdfbfb, #f5ebe0);
+    overflow-x: hidden;
   }
+  
+
   
   /* Overall Layout */
   .app-layout {
@@ -17,14 +20,13 @@
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
   height: 100vh; /* Full viewport height */
-  width: 100vw; /* Full viewport width */
+  width: 50vw; /* Full viewport width */
   }
-  
-  /* Sidebar */
-  .sidebar {
-  width: 200px;
+  /* Sidebar Adjustments */
+.sidebar {
+  width: 220px; /* Slightly increase width for balance */
   background-color: #ff9f68;
-  position: fixed; /* Ensure it stays fixed without affecting the rest */
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
@@ -32,8 +34,8 @@
   flex-direction: column;
   align-items: center;
   overflow-y: auto;
-  scrollbar-width: none; /* Hide scrollbar */
-  }
+  scrollbar-width: none;
+}
   
   .sidebar::-webkit-scrollbar {
   display: none;
@@ -52,6 +54,16 @@
   margin: 0;
   }
   
+  .diary-list-container {
+    flex: 1; /* Allow the list to take up remaining space */
+    overflow-y: auto; /* Make the date list scrollable */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+  }
+
+  .diary-list-container::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for WebKit browsers */
+  }
+
   .diary-item {
   font-size: 1rem;
   margin: 8px 0;
@@ -75,18 +87,19 @@
   background-color: #ff7043;
   }
   
-  /* Main Content Styling */
-  .main-content {
-  flex: 1;
-  margin: 0 auto; /* Center horizontally */
-  padding: 40px; /* Add padding around content */
-  width: 80%; /* Limit the width to avoid stretching */
-  display: flex; /* Enable flex for vertical centering */
-  flex-direction: column;
-  justify-content: center; /* Center vertically */
-  align-items: center; /* Center content horizontally */
-  margin-left: 220px; /* Move the content slightly to the right */
-  }
+/* Main Content Styling */
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns for description and generated image */
+  grid-template-rows: 1fr 1fr 0.5fr; /* Rescale rows to balance space */
+  gap: 20px;
+  width: calc(100% - 220px); /* Adjust width to fit the sidebar */
+  margin-left: 220px; /* Offset to align with sidebar */
+  align-items: start;
+  height: calc(100vh - 20px); /* Full height minus padding */
+  padding: 10px;
+  box-sizing: border-box;
+}
   
   
   .main-title {
@@ -96,12 +109,16 @@
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
   }
   
-  /* Input Icons Styling */
-  .input-icons {
+
+/* Input Icons Styling (Top of Description Block) */
+.input-icons {
+  grid-column: 1 / 2; /* First column */
+  grid-row: 1 / 2; /* First row */
   display: flex;
+  justify-content: flex-start; /* Align icons to the left */
   gap: 10px;
-  margin: 15px 0;
-  }
+  margin-bottom: 10px; /* Add space below icons */
+}
   
   .input-icon {
   font-size: 26px;
@@ -119,33 +136,34 @@
   color: #ff7043;
   }
   
-  /* Description Input Styling */
-  .description-input {
-  width: 80%;
-  height: 400px;
-  padding: 15px;
-  margin-bottom: 20px;
+/* Description Input Block */
+.description-input {
+  grid-column: 1 / 2; /* First column */
+  grid-row: 1 / 3; /* Span two rows */
+  width: 100%;
+  height: 100%; /* Utilize the full allocated space */
+  border-radius: 15px;
   border: 2px solid #ffab91;
-  border-radius: 12px;
-  font-size: 1rem;
-  outline: none;
-  resize: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   background-color: #fffaf0;
-  color: #333;
-  }
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+}
+
   
   .description-input:focus {
   border-color: #ff5722;
   box-shadow: 0 0 8px #ff7043;
   }
   
-  .button-container {
+/* Buttons Adjustments */
+.button-container {
   display: flex;
   justify-content: space-evenly;
-  gap: 15px; /* Space between buttons */
-  margin: 20px 0; /* Adjust vertical spacing */
-  }
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px;
+  width: 100%; /* Align buttons to fit within the slider */
+}
   
   .button {
   padding: 12px 20px; /* Consistent size */
@@ -211,21 +229,22 @@
   opacity: 0.9; /* Light fade effect */
   }
   
-  /* Image Display Styling */
-  .image-display {
-  width: 80%;
-  height: 300px;
-  border: 2px dashed #ffab91;
+
+/* Generated Image Block */
+.image-display {
+  grid-column: 2 / 3; /* Second column */
+  grid-row: 1 / 3; /* Span two rows */
+  width: 100%;
+  height: 100%; /* Utilize the full allocated space */
   border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  border: 2px dashed #ffab91;
   background-color: #fff;
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
+  overflow: hidden;
+}
   .generated-image {
   max-width: 100%;
   max-height: 100%;
@@ -238,15 +257,20 @@
   color: #ff7043;
   }
   
-  /* Mood Slider Container */
-  .mood-slider-container {
-  width: 80%;
+/* Mood Slider */
+.mood-slider-container {
+  grid-column: 1 / 3; /* Span across both columns */
+  grid-row: 3 / 4; /* Third row */
+  width: 100%; /* Full width */
+  height: 100%; /* Full allocated height */
+  background-color: #fffaf0;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
-  }
-  
+}
   .mood-emojis {
   display: flex;
   justify-content: space-between;
@@ -289,20 +313,19 @@
   cursor: pointer;
   }
   
-  /* Mood Analysis */
-  .mood-analysis {
+/* Mood Analysis Panel */
+.mood-analysis {
   position: fixed;
-  bottom: 60px;
+  bottom: 20px;
   right: 20px;
-  width: 220px;
+  width: 250px; /* Adjust width for better proportions */
   padding: 15px;
   background-color: #ffe4e1;
   border: 2px solid #ff7043;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  color: #333;
-  }
+}
   
   .mood-analysis h3 {
   margin-bottom: 10px;
@@ -322,19 +345,37 @@
   color: #555;
   }
   
-  @media (max-width: 768px) {
-  .app-layout {
-      flex-direction: column; /* Stack items vertically */
-      justify-content: flex-start; /* Align to the top */
-      align-items: center; /* Center horizontally */
-  }
-  
+/* Responsive Adjustments */
+@media (max-width: 768px) {
   .main-content {
-      margin: 0 auto; /* Center the content */
-      width: 90%; /* Adjust width */
-      padding: 1ch; /* Reduce padding for smaller screens */
+    display: flex;
+    flex-direction: column;
+    margin-left: 0;
+    width: 100%;
   }
+
+  .description-input,
+  .image-display,
+  .mood-slider-container {
+    width: 100%;
+    height: auto; /* Adjust height dynamically */
+    margin-bottom: 20px;
   }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+
+  .mood-analysis {
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    right: 0;
+    margin-top: 10px;
+  }
+}
   
   
   /* Drawing Overlay Styling */
@@ -731,8 +772,8 @@
   
   .cat-animation {
   position: fixed;
-  top:40px; /* Position it below the music button */
-  right: -40px; /* Align with the music button */
+  top: 40px; /* Position it below the music button */
+  right: 0px; /* Align with the music button */
   left: 2200px;
   display: flex;
   justify-content: center;
@@ -787,11 +828,30 @@
       text-align: center;
     }
     
-    .music-thumbnail {
-      display: block;
-      margin: 0 auto;
-      border-radius: 10px; /* Optional */
-    }
+/* Music Thumbnail (Bottom Right) */
+.music-thumbnail-container {
+  grid-column: 2 / 3; /* Second column */
+  grid-row: 4 / 5; /* Fourth row */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end; /* Align to the bottom */
+  padding: 10px;
+  background-color: #fff5e6; /* Warm background */
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+}
+
+.music-thumbnail img {
+  width: 100px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.music-thumbnail p {
+  font-size: 0.9rem;
+  color: #ff7043; /* Warm text color */
+}
   
     /* FAQ Modal Container */
   .faq-modal {
@@ -980,67 +1040,56 @@
       }
     }
 
-/* General Pop-Up Styling */
-.popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.4); /* Soft dark overlay */
+
+.user-profile {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px); /* Adds a soft blur effect */
+  justify-content: center;
+  padding: 15px;
+  background-color: #ffe4e1;
+  border-top: 2px solid #ff7043; /* Optional border to separate from list */
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
 
-/* Pop-Up Content Box */
-.popup-content {
-  background: #fff8e8; /* Warm, light beige color */
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-  text-align: center;
-  max-width: 600px;
-  width: 90%; /* Responsive width */
-  animation: fadeIn 0.3s ease-in-out;
+.user-photo {
+  width: 40px; /* Adjust the width of the image */
+  height: 40px; /* Adjust the height of the image */
+  border-radius: 50%; /* Makes the image circular */
+  margin-bottom: 10px; /* Space between the photo and the name */
+  object-fit: cover; /* Ensures the image fits within the circle without distortion */
+  border: 2px solid #ff7043; /* Adds an orange border for better visibility */
+  background-color: #f5f5f5; /* Fallback background color */
 }
 
-/* Pop-Up Image Styling */
-.generated-image {
-  max-width: 100%;
-  max-height: 70vh;
-  border-radius: 15px; /* Rounded edges for the image */
-  margin-bottom: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle image shadow */
-}
-
-/* Close Button */
-.button.cancel-button {
-  padding: 10px 20px;
-  background-color: #ffa726; /* Warm orange */
-  color: white;
-  font-size: 16px;
+.user-name {
+  font-size: 1.2rem;
   font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  color: #333;
+  text-align: center;
 }
 
-.button.cancel-button:hover {
-  background-color: #ff9800; /* Slightly darker orange on hover */
-}
-
-/* Fade-In Animation */
-@keyframes fadeIn {
-  from {
-      opacity: 0;
-      transform: scale(0.9);
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%; /* Make the sidebar full width */
+    height: auto; /* Adjust height for smaller screens */
+    position: relative; /* Remove fixed positioning */
   }
-  to {
-      opacity: 1;
-      transform: scale(1);
+
+  .user-profile {
+    flex-direction: row; /* Align photo and name side-by-side */
+    justify-content: space-between;
+    padding: 10px;
+  }
+
+  .user-photo {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+  }
+
+  .user-name {
+    font-size: 1rem;
+    margin-left: 10px;
   }
 }
