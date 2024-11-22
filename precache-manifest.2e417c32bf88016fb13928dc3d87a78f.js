@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "4218925ecfe859f83b95d03d9cd8eebe",
+    "revision": "05cd62cb54acafaba534b235c5e33221",
     "url": "/Moodify-Journal/index.html"
   },
   {
-    "revision": "0262932fa12c2b6d2d8b",
+    "revision": "a3533c3b8544cf22a75a",
     "url": "/Moodify-Journal/static/css/main.a4b95569.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/Moodify-Journal/static/js/3.a91603d8.chunk.js"
   },
   {
-    "revision": "0262932fa12c2b6d2d8b",
-    "url": "/Moodify-Journal/static/js/main.dd1d9b90.chunk.js"
+    "revision": "a3533c3b8544cf22a75a",
+    "url": "/Moodify-Journal/static/js/main.32eeb040.chunk.js"
   },
   {
     "revision": "207e85b82364d20caaee",
