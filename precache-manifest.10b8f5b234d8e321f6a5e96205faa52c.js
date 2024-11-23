@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "7a28277c8f9556a13a1ab523e0c74b3b",
+    "revision": "5701fff2c4df63fcb7364b6433ef2a93",
     "url": "/Moodify-Journal/index.html"
   },
   {
