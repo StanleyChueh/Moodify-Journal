@@ -6,6 +6,28 @@ import DrawingModal from './DrawingModal';
 import ReviewMemoriesModal from './ReviewMemoriesModal';
 import catGif from './cat.gif';
 import PatrickStar from './spongebob-patrick-star.gif'
+import { FaBars } from 'react-icons/fa'; 
+
+const useWindowSize = () => {
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowSize;
+};
 
 // Constants
 const moodLabels = ["Anger", "Neutral", "Fear", "Sadness", "Surprise", "Happiness"];
@@ -248,6 +270,8 @@ function App() {
   const [isPointPopupOpen, setIsPointPopupOpen] = useState(false); // Controls point card pop-up visibility
   const [checkedDays, setCheckedDays] = useState(new Set()); // Tracks days with points already awarded
   const [youtubePlayer, setYoutubePlayer] = useState(null); // Reference to YouTube IFrame player
+  const [isMoodAnalysisModalOpen, setIsMoodAnalysisModalOpen] = useState(false); // For Mood Analysis
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false); // For Alert Modal
   const [customMoodImages, setCustomMoodImages] = useState({
     Anger: [],
     Neutral: [],
@@ -256,6 +280,12 @@ function App() {
     Surprise: [],
     Happiness: [],
   });  
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const toggleBackgroundMusic = () => {
     if (!youtubePlayer) return;
@@ -404,6 +434,17 @@ function App() {
     }
   };
   
+  const toggleMusic = () => {
+    if (!youtubePlayer) return; // Ensure player is ready
+  
+    if (isMusicPlaying) {
+      youtubePlayer.pauseVideo(); // Pause music
+    } else {
+      youtubePlayer.playVideo(); // Play music
+    }
+  
+    setIsMusicPlaying(!isMusicPlaying); // Update state
+  };  
   
   const handleLanguageSelect = (languageCode) => {
     //setSelectedLanguage(languageCode);
@@ -993,9 +1034,21 @@ function App() {
     }
   }, [mood]);
   
+  const windowSize = useWindowSize();
+
+  const autoResizeTextarea = (textarea) => {
+    textarea.style.height = 'auto'; // Reset the height
+    textarea.style.height = `${textarea.scrollHeight}px`; // Adjust to fit content
+  };  
+  
   return (
     <div className="app-layout">
-      <div className="sidebar">
+      {/* Toggle Button Only for Mobile */}
+      <button className="toggle-menu" onClick={toggleSidebar}>
+        <FaBars />
+      </button>
+      {/* Sidebar with Date List */}
+      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <h2 className="sidebar-title">Diary AI</h2>
         <div className="diary-list-container">
           <ul className="diary-list">
@@ -1003,7 +1056,10 @@ function App() {
               <li
                 key={date}
                 className={`diary-item ${date === selectedDate ? 'active' : ''}`}
-                onClick={() => handleDateClick(date)}
+                onClick={() => {
+                  handleDateClick(date);
+                  setIsSidebarOpen(false); // Close sidebar after selection only on mobile
+                }}
               >
                 {index === 0 ? 'Today' : date}
               </li>
@@ -1044,12 +1100,16 @@ function App() {
         )}
 
         {activeInputMode === 'typing' && (
-          <textarea
-            className="description-input" // Shared styling
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="How's your day?"
-          />
+        <textarea
+          className="description-input mobile-dynamic" // Shared styling
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          onInput={(e) => {
+            e.target.style.height = "auto"; // Reset height to auto
+            e.target.style.height = `${e.target.scrollHeight}px`; // Adjust to scroll height
+          }}
+          placeholder="How's your day?"
+        />
         )}
 
         {activeInputMode === 'speech' && (
@@ -1081,7 +1141,52 @@ function App() {
             Image
           </button>
         </div>
-        
+
+        {/* Mobile Layout */}
+        {windowSize.width <= 768 && (
+          <div className="mobile-controls">
+            <div className="button-row">
+              {/* Mood Analysis Button */}
+              <button
+                className="button mood-analysis-button"
+                onClick={() => setIsMoodAnalysisModalOpen(true)}
+              >
+                Past Mood Analysis
+              </button>
+
+              {/* Play Music Button */}
+              <button
+                className="button play-music-button"
+                onClick={toggleMusic}
+              >
+                {isMusicPlaying ? "Pause Music" : "Background Music"}
+              </button>
+            </div>
+
+            {/* Mood Analysis Modal */}
+            {isMoodAnalysisModalOpen && (
+              <div className="mood-analysis-modal">
+                <div className="modal-content">
+                  <h3>Past 14 Days Mood Analysis</h3>
+                  <ul>
+                    {Object.keys(moodAnalysis).map((mood, index) => (
+                      <li key={mood}>
+                        {moodLabels[index]} {moodEmojis[index]}: {moodAnalysis[mood]}
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    className="close-modal"
+                    onClick={() => setIsMoodAnalysisModalOpen(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         <PlaylistModal
           isOpen={isPlaylistModalOpen}
           onClose={() => setIsPlaylistModalOpen(false)}
@@ -1122,16 +1227,22 @@ function App() {
           </div>
         )}
 
-        <div className="mood-analysis">
-          <h3>Past 14 Days Mood Analysis</h3>
-          <ul>
-            {Object.keys(moodAnalysis).map((mood, index) => (
-              <li key={mood}>
-                {moodLabels[index]} {moodEmojis[index]}: {moodAnalysis[mood]}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {/* Desktop Layout */}
+        {windowSize.width > 768 && (
+          <div className="desktop-mood-analysis">
+            {/* Static Mood Analysis for Desktop */}
+            <div className="mood-analysis">
+              <h3>Past 14 Days Mood Analysis</h3>
+              <ul>
+                {Object.keys(moodAnalysis).map((mood, index) => (
+                  <li key={mood}>
+                    {moodLabels[index]} {moodEmojis[index]}: {moodAnalysis[mood]}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
 
         <AlertModal
           isOpen={isModalOpen}
@@ -1213,13 +1324,15 @@ function App() {
       )}
 
       <div className="top-right-controls">
-        <button onClick={toggleBackgroundMusic} className="music-toggle-button">
-          {isBackgroundMusicPlaying ? (
-            <span>🎵 Pause Music</span>
-          ) : (
-            <span>🎶 Play Music</span>
-          )}
-        </button>
+        {windowSize.width > 768 && ( // Only render the button on non-mobile screens
+          <button onClick={toggleBackgroundMusic} className="music-toggle-button">
+            {isBackgroundMusicPlaying ? (
+              <span> Pause Music</span>
+            ) : (
+              <span>🎶 Play Music</span>
+            )}
+          </button>
+        )}
       </div>
 
       <div id="background-music-player"></div>

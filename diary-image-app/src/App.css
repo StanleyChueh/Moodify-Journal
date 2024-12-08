@@ -22,7 +22,7 @@
   
   /* Sidebar */
   .sidebar {
-  width: 200px;
+  width: 100px;
   background-color: #ff9f68;
   position: fixed; /* Ensure it stays fixed without affecting the rest */
   top: 0;
@@ -80,7 +80,7 @@
   flex: 1;
   margin: 0 auto; /* Center horizontally */
   padding: 40px; /* Add padding around content */
-  width: 80%; /* Limit the width to avoid stretching */
+  width: 100%; /* Limit the width to avoid stretching */
   display: flex; /* Enable flex for vertical centering */
   flex-direction: column;
   justify-content: center; /* Center vertically */
@@ -121,18 +121,19 @@
   
   /* Description Input Styling */
   .description-input {
-  width: 80%;
-  height: 400px;
-  padding: 15px;
-  margin-bottom: 20px;
-  border: 2px solid #ffab91;
-  border-radius: 12px;
-  font-size: 1rem;
-  outline: none;
-  resize: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background-color: #fffaf0;
-  color: #333;
+    width: 80%; /* Default width for larger screens */
+    height: 300px; /* Adjust default height */
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 2px solid #ffab91;
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
+    resize: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fffaf0;
+    color: #333;
+    box-sizing: border-box; 
   }
   
   .description-input:focus {
@@ -213,17 +214,17 @@
   
   /* Image Display Styling */
   .image-display {
-  width: 80%;
-  height: 300px;
-  border: 2px dashed #ffab91;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background-color: #fff;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Ensure full width for mobile */
+    max-width: 400px; /* Limit the maximum width */
+    height: auto; /* Maintain aspect ratio */
+    border: 2px dashed #ffab91; /* Optional border for visibility */
+    border-radius: 10px; /* Rounded corners */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #fff;
+    margin: 10px auto; /* Center thumbnail on the screen */
   }
   
   .generated-image {
@@ -323,17 +324,110 @@
   }
   
   @media (max-width: 768px) {
+    .button-container {
+      margin-bottom: 20px; /* Add some space below the buttons */
+      display: flex;
+      flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+      justify-content: space-around; /* Spread out the buttons */
+      gap: 10px; /* Add spacing between buttons */
+  }
+  
+    .customize-mood-button,
+    .play-music-button {
+      display: block; /* Make them visible only on mobile */
+      padding: 10px 15px;
+      font-size: 0.9rem;
+      background-color: #ffab91;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  
+    .customize-mood-button:hover,
+    .play-music-button:hover {
+      background-color: #ff7043;
+    }
+  }  
+
+  @media (max-width: 768px) {
+    .main-content .description-input {
+      height: 200px !important; /* Add !important to enforce the rule */
+    }
   .app-layout {
       flex-direction: column; /* Stack items vertically */
       justify-content: flex-start; /* Align to the top */
       align-items: center; /* Center horizontally */
   }
   
+  .main-title {
+    font-size: 2rem;
+    margin-top: 60px; /* Add space above */
+    margin-bottom: 10px; /* Space below */
+    color: #ff7043;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+  }  
+    
   .main-content {
       margin: 0 auto; /* Center the content */
       width: 90%; /* Adjust width */
       padding: 1ch; /* Reduce padding for smaller screens */
   }
+  .description-input {
+    height: 150px; /* Reduce height to make more space for buttons */
+    margin-bottom: 15px; /* Add some space below */
+    font-size: 1rem; /* Ensure the text is readable */
+}
+  .image-display {
+    max-width: 90%; /* Adjust to fit smaller screens */
+    height: auto; /* Keep aspect ratio */
+    margin: 10px auto; /* Center align */
+  }
+  .generated-image {
+    max-height: 150px; /* Smaller height for mobile */
+    object-fit: contain; /* Adjust fitting behavior */
+  }
+  .mood-analysis {
+    width: 40%; /* Reduce width */
+    max-width: 300px; /* Set a maximum width */
+    padding: 10px; /* Reduce padding */
+    font-size: 0.9rem; /* Decrease font size */
+    margin: 10px auto; /* Adjust margin */
+    background-color: #ffe4e1;
+    border: 1px solid #ff7043;
+    border-radius: 8px; /* Smaller rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: center; /* Center-align content */
+  }
+  .mood-analysis h3 {
+    font-size: 1rem; /* Smaller title */
+    margin-bottom: 5px;
+  }
+  .mood-analysis ul {
+    margin: 0;
+    padding: 0;
+  }
+  .mood-analysis li {
+    font-size: 0.85rem; /* Reduce font size for list items */
+  }
+  .music-suggestion {
+    width: 80%; /* Reduce width */
+    max-width: 300px; /* Set a maximum width */
+    margin: 10px auto; /* Adjust spacing */
+    text-align: center; /* Center-align */
+  }
+  
+  .music-thumbnail {
+    margin-top: 400px; /* Increase this value to push it further down */
+    max-width: 90%; /* Ensure it fits on smaller screens */
+    max-height: 200px; /* Limit the height */
+    overflow-y: auto; /* Enable scrolling if needed */
+    border-radius: 10px; /* Optional rounded corners */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Optional shadow */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
   }
   
   
@@ -782,8 +876,8 @@
   }
   
   .music-suggestion {
-      margin-top: 80px !important; /* Forces the style to apply */
-      margin-bottom: 10px;
+      margin-top: 10px !important; /* Forces the style to apply */
+      margin-bottom: 0px;
       text-align: center;
     }
     
@@ -978,6 +1072,11 @@
       .faq-modal ul li p {
         font-size: 0.95rem;
       }
+      .button-container .button {
+        width: auto; /* Let buttons adjust size */
+        flex: 1; /* Distribute space evenly */
+        padding: 10px; /* Smaller padding */
+      }
     }
     .popup {
       position: fixed;
@@ -1005,7 +1104,7 @@
   }
   
   .generated-image {
-      max-width: 100%;
+      max-width:100%;
       max-height: 200px;
       border-radius: 10px;
       margin-bottom: 20px;
@@ -1070,5 +1169,672 @@
           opacity: 1;
           transform: scale(1);
       }
+  }
+  
+
+  .toggle-menu {
+    display: none;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: linear-gradient(135deg, #ffa726, #ff7043);
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .toggle-menu:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Sidebar styling for mobile */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #ff9f68;
+    width: 220px; /* Adjusted for visibility on both desktop and mobile */
+    overflow-y: auto;
+    transform: translateX(0); /* Default to visible on desktop */
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  @media (max-width: 768px) {
+    .sidebar {
+      transform: translateX(-100%); /* Hidden by default on mobile */
+    }
+  
+    .sidebar.open {
+      transform: translateX(0); /* Show sidebar when open on mobile */
+    }
+  
+    .toggle-menu {
+      display: block; /* Show toggle button only on mobile */
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: linear-gradient(135deg, #ffa726, #ff7043);
+      border: none;
+      color: #fff;
+      font-size: 24px;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  
+    .toggle-menu:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .toggle-menu {
+      display: none; /* Hide toggle button on desktop */
+    }
+  
+    .main-content {
+      margin-left: 240px; /* Make space for the sidebar */
+    }
+  }
+  
+  .main-content {
+    transition: margin-left 0.3s;
+    padding: 20px;
+    width: 100%;
+    overflow: hidden;
+  }
+  @media (max-width: 768px) {
+    .mobile-controls .mood-analysis-button {
+      display: block;
+      width: auto;
+      padding: 10px 15px;
+      margin: 10px auto;
+      font-size: 0.9rem;
+      background-color: #ffab91;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  
+    .mood-analysis-button:hover {
+      background-color: #ff7043;
+    }
+  
+    .mood-analysis-modal {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+      max-width: 90%;
+      width: 400px;
+    }
+  }
+  
+
+  @media (max-width: 768px) {
+    .music-toggle-button {
+      font-size: 8px; /* Smaller font size for mobile */
+      padding: 8px 16px; /* Adjust padding for compact size */
+      width: auto; /* Allow the width to adjust dynamically */
+      height: auto; /* Adjust height dynamically */
+      border-radius: 20px; /* Softer rounded corners */
+      top: 55px; /* Adjust position to fit the layout */
+      right: 15px; /* Adjust alignment */
+      background: linear-gradient(90deg, #ffa726, #ff7043); /* Ensure a smooth gradient */
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+    }
+  
+    .music-toggle-button:hover {
+      transform: scale(1.05); /* Add slight hover effect */
+      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .button-row {
+      display: flex;
+      justify-content: center; /* Center align the buttons */
+      align-items: center; /* Align vertically */
+      gap: 10px; /* Add spacing between buttons */
+      margin-bottom: 10px; /* Add space below the button row */
+    }
+  
+    .mood-analysis-button, .play-music-button {
+      flex: 1; /* Make buttons take equal width */
+      font-size: 0.9rem; /* Ensure font size consistency */
+      padding: 10px 20px; /* Adjust padding for both buttons */
+      border-radius: 12px; /* Rounded corners for both buttons */
+      height: 40px; /* Set a consistent height */
+    }
+  
+    .mood-analysis-button {
+      background-color: #ffab91;
+      color: white;
+    }
+  
+    .play-music-button {
+      background-color: #ffcc80;
+      color: white;
+    }
+  
+    .mood-analysis-button:hover, .play-music-button:hover {
+      opacity: 0.9; /* Slight transparency on hover */
+    }
+    .mood-analysis-modal {
+      position: fixed;
+      top: 50%; /* Center vertically */
+      left: 50%; /* Center horizontally */
+      transform: translate(-50%, -50%);
+      width: 80%; /* Smaller width for mobile */
+      max-width: 400px; /* Limit maximum width */
+      background-color: transparent; /* Remove background color */
+      border: none; /* Remove any border */
+      border-radius: 12px; /* Smooth corners if needed */
+      box-shadow: none; /* Remove shadow */
+      padding: 20px;
+      z-index: 1000; /* Ensure it overlays all other elements */
+    }
+  
+    /* Explicitly remove any pseudo-element causing the issue */
+    .mood-analysis-modal::before,
+    .mood-analysis-modal::after {
+      content: ''; /* Ensure no pseudo-elements are used */
+      display: none; /* Disable */
+    }    
+    
+    .mood-analysis-modal::before {
+      content: ''; /* Remove unintended overlay */
+      display: none; /* Disable the background square */
+    }    
+    
+    .modal-content h3 {
+      font-size: 1.2rem; /* Adjust the font size for the title */
+      margin-bottom: 15px; /* Add space below the title */
+      color: #ff7043; /* Match the theme color */
+      text-align: center; /* Center the title */
+    }
+    
+    .modal-content ul {
+      list-style: none; /* Remove default list styling */
+      padding: 0; /* Remove padding */
+      font-size: 0.9rem; /* Adjust the font size for readability */
+      color: #333; /* Neutral text color */
+    }
+    
+    .modal-content li {
+      margin: 5px 0; /* Add space between items */
+    }
+    
+    .close-modal {
+      display: block;
+      margin: 20px auto 0; /* Center the button and add space above */
+      padding: 10px 20px;
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    
+    .close-modal:hover {
+      background-color: #ff5722; /* Darken the button on hover */
+    }
+    .modal-container {
+      background: none; /* Remove any background color */
+      box-shadow: none; /* Remove shadows */
+    }
+    .drawing-overlay {
+      position: fixed; /* Keep it fixed to overlay the screen */
+      top: 5%; /* Add some margin from the top */
+      left: 5%; /* Add space from the left */
+      right: 5%; /* Add space from the right */
+      bottom: 5%; /* Add space from the bottom */
+      background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+      display: flex;
+      justify-content: center; /* Center the canvas horizontally */
+      align-items: center; /* Center the canvas vertically */
+      z-index: 1000;
+      border-radius: 12px; /* Add rounding for smooth edges */
+    }
+  
+    .drawing-canvas {
+      background: white;
+      border: 2px solid #ff7043;
+      width: 90%; /* Fit 90% of the overlay width */
+      height: 70%; /* Fit 70% of the overlay height */
+      max-width: 500px; /* Limit the maximum width */
+      max-height: 350px; /* Limit the maximum height */
+      border-radius: 8px; /* Smooth canvas corners */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+    }
+  
+    .close-drawing {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 14px; /* Adjust the font size */
+      padding: 8px 16px;
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 1100; /* Ensure it stays above other elements */
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    }
+  
+    .close-drawing:hover {
+      background-color: #ff5722;
+    }
+    .image-upload-modal {
+      background: linear-gradient(145deg, #fff5e6, #fff0e6); /* Warm gradient background */
+      border: 2px solid #ff9f68; /* Warm orange border */
+      border-radius: 20px; /* Smooth rounded corners */
+      padding: 20px; /* Adjust padding */
+      box-shadow: 0 8px 24px rgba(255, 112, 67, 0.15); /* Subtle shadow */
+      width: 90%; /* Reduce width to fit smaller screens */
+      max-width: 400px; /* Limit the maximum width */
+      text-align: center;
+      position: fixed;
+      top: 50%; /* Center vertically */
+      left: 50%; /* Center horizontally */
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+    }
+    
+    .image-upload-modal select,
+    .image-upload-modal input[type="file"] {
+      width: 90%; /* Reduce width for better mobile fit */
+      margin-bottom: 10px; /* Add spacing */
+      padding: 8px;
+      border: 2px dashed #ffccbc; /* Dashed border for file input */
+      border-radius: 8px;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      justify-content: space-between; /* Distribute buttons */
+      gap: 10px;
+      flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    }
+    
+    .modal-buttons button {
+      flex: 1; /* Equal width for all buttons */
+      padding: 10px; /* Compact padding */
+      border-radius: 8px; /* Rounded corners */
+    }
+    
+  }
+
+  @media (max-width: 768px) {
+    .reward-message {
+      background: linear-gradient(135deg, #fff9e6, #fef3e3);
+      padding: 5px; /* Reduce padding further */
+      margin: 6px auto; /* Decrease margin */
+      border-radius: 6px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      width: 80%; /* Shrink width */
+      max-width: 220px; /* Further limit max width */
+      text-align: center;
+      font-family: "Arial", sans-serif;
+    }
+  
+    .reward-message h3 {
+      font-size: 0.75rem; /* Smaller font size for heading */
+      margin-bottom: 3px; /* Compact spacing */
+      color: #ff7043;
+    }
+  
+    .reward-message p {
+      font-size: 0.65rem; /* Decrease text size */
+      margin: 1px 0; /* Compact spacing */
+      line-height: 1; /* Tighter line height */
+      color: #444;
+    }
+  
+    .reward-gif {
+      max-width: 60%; /* Shrink gif size */
+      height: auto;
+      margin: 4px auto; /* Decrease margin */
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+  
+    .reward-button {
+      display: block;
+      width: 50%; /* Smaller button width */
+      margin: 3px auto; /* Tighter margin */
+      padding: 3px 6px; /* Reduce padding */
+      font-size: 0.65rem; /* Decrease text size */
+      font-weight: 600;
+      background-color: #ff7043;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+    }
+  
+    .reward-button:hover {
+      background-color: #ff5722;
+      transform: scale(1.02);
+    }
+  
+    .reward-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px; /* Reduce spacing between elements */
+    }
+    .image-upload-modal {
+      background: linear-gradient(145deg, #fff5e6, #fff0e6); /* Warm gradient background */
+      border: 2px solid #ff9f68; /* Warm orange border */
+      border-radius: 15px; /* Adjust rounded corners */
+      padding: 15px; /* Reduce padding for compactness */
+      box-shadow: 0 4px 16px rgba(255, 112, 67, 0.2); /* Subtle shadow */
+      width: 85%; /* Further reduce width for smaller devices */
+      max-width: 360px; /* Limit maximum width */
+      text-align: center;
+      position: fixed;
+      top: 50%; /* Center vertically */
+      left: 50%; /* Center horizontally */
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+    }
+    
+    .image-upload-modal h3 {
+      font-size: 1rem; /* Smaller font size for title */
+      margin-bottom: 10px; /* Compact spacing */
+      color: #ff7043;
+    }
+    
+    .image-upload-modal select,
+    .image-upload-modal input[type="file"] {
+      width: 100%; /* Full width for inputs */
+      margin-bottom: 10px; /* Add spacing */
+      padding: 6px; /* Reduce padding for compactness */
+      border: 2px dashed #ffccbc; /* Dashed border for file input */
+      border-radius: 8px;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      flex-wrap: wrap; /* Allow buttons to stack on smaller screens */
+      gap: 8px; /* Smaller gap between buttons */
+      justify-content: center;
+    }
+    
+    .modal-buttons button {
+      flex: 1; /* Equal width for all buttons */
+      padding: 8px; /* Adjust padding for compactness */
+      font-size: 0.8rem; /* Decrease font size */
+      border-radius: 8px; /* Rounded corners */
+    }
+    
+    .modal-buttons .save-button,
+    .modal-buttons .remove-button,
+    .modal-buttons .cancel-button {
+      min-width: 80px; /* Minimum button width */
+    }
+    #remove-image-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    
+    .modal-content {
+      background: #fff5e6; /* Light warm background */
+      padding: 15px; /* Reduce padding for a more compact look */
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      width: 85%; /* Adjust to fit smaller screens */
+      max-width: 300px; /* Limit maximum width */
+    }
+    
+    .modal-content h3 {
+      font-size: 1.2rem; /* Slightly smaller title font */
+      margin-bottom: 10px; /* Compact spacing */
+      color: #ff7043;
+    }
+    
+    .modal-content select,
+    .modal-content input[type="file"] {
+      width: 95%; /* Adjust width for responsiveness */
+      margin-bottom: 10px;
+      padding: 8px;
+      border: 2px dashed #ffccbc; /* Dashed border for file input */
+      border-radius: 8px;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      flex-wrap: wrap; /* Allow buttons to stack on smaller screens */
+      gap: 10px; /* Adjust spacing between buttons */
+      justify-content: center; /* Center-align buttons */
+    }
+    
+    .modal-buttons button {
+      flex: 1; /* Equal width for all buttons */
+      padding: 8px; /* Compact padding */
+      font-size: 0.8rem; /* Smaller font size */
+      border-radius: 8px; /* Rounded corners */
+      min-width: 80px; /* Ensure minimum button width */
+    }
+    
+    .modal-buttons .save-button {
+      background: #ff9f68; /* Warm orange */
+      color: #000;
+    }
+    
+    .modal-buttons .save-button:hover {
+      background: #ff7043;
+      transform: translateY(-2px);
+    }
+    
+    .modal-buttons .remove-button {
+      background: #ff8a80; /* Warm red */
+      color: #000;
+    }
+    
+    .modal-buttons .remove-button:hover {
+      background: #ff5252;
+      transform: translateY(-2px);
+    }
+    
+    .modal-buttons .cancel-button {
+      background: #fbe9e7; /* Light warm orange */
+      color: #000;
+    }
+    
+    .modal-buttons .cancel-button:hover {
+      background: #ffccbc;
+      transform: translateY(-2px);
+    }
+/* Image Grid Layout */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Responsive grid */
+  gap: 12px; /* Reduce the gap for compact spacing */
+  padding: 10px; /* Add a bit of padding around the grid */
+  max-width: 90%; /* Reduce the width for better fit */
+  margin: 0 auto; /* Center-align the grid */
+}
+
+/* Image Styling */
+.image-grid img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px; /* Softer corners */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Add subtle shadow */
+  transition: transform 0.3s ease; /* Smooth scaling on hover */
+}
+
+.image-grid img:hover {
+  transform: scale(1.03); /* Slight zoom effect on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+/* Remove Button Styling */
+.image-grid .remove-button {
+  position: absolute;
+  bottom: 5px; /* Adjust placement closer to the image */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff6f61; /* Updated color for better contrast */
+  color: #ffffff;
+  border: none;
+  padding: 6px 10px; /* Compact size */
+  font-size: 0.8rem; /* Smaller font for mobile */
+  border-radius: 6px; /* Softer corners */
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  transition: all 0.2s ease-in-out; /* Smooth hover effect */
+}
+
+.image-grid .remove-button:hover {
+  background: #e53935; /* Slightly darker hover effect */
+  transform: translateX(-50%) scale(1.1); /* Slightly enlarge on hover */
+}
+
+#remove-image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-content {
+  background: #ffe9e3;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
+}
+
+.modal-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #ff7043;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 images per row */
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.image-item {
+  position: relative;
+}
+
+.image-item img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.image-item button {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff7043;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.image-item button:hover {
+  background: #ff5722;
+  transform: translateX(-50%) scale(1.05);
+}
+
+.cancel-button {
+  display: block;
+  margin: 0 auto;
+  background: #ffcc80;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.cancel-button:hover {
+  background: #ffa726;
+}
+
+  }
+  
+  @media (max-width: 768px) {
+    .description-input.mobile-dynamic {
+      width: 100%; /* Full width for mobile */
+      font-size: 1rem; /* Consistent font size */
+      padding: 10px; /* Spacing for readability */
+      border: 1px solid #ccc; /* Optional border styling */
+      border-radius: 8px; /* Rounded corners for better appearance */
+      height: auto;
+      min-height: 30px; /* Set a minimum height */
+
+    }
+    .description-input {
+      overflow-y: hidden; /* Hide vertical scrollbar */
+      resize: none; /* Disable manual resizing */
+      width: 100%; /* Full width for mobile */
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 1rem;
+      border: 2px solid #ffab91;
+      background-color: #fffaf0;
+      color: #333;
+    }
+    
+    .description-input.mobile-dynamic {
+      min-height: 30px; /* Minimum height */
+    }
+    
   }
   
