@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/Moodify-Journal/static/css/main.8bc3ee02.chunk.css",
-    "main.js": "/Moodify-Journal/static/js/main.4d9f3543.chunk.js",
-    "main.js.map": "/Moodify-Journal/static/js/main.4d9f3543.chunk.js.map",
+    "main.css": "/Moodify-Journal/static/css/main.a4efe5f0.chunk.css",
+    "main.js": "/Moodify-Journal/static/js/main.f891b579.chunk.js",
+    "main.js.map": "/Moodify-Journal/static/js/main.f891b579.chunk.js.map",
     "runtime-main.js": "/Moodify-Journal/static/js/runtime-main.244be453.js",
     "runtime-main.js.map": "/Moodify-Journal/static/js/runtime-main.244be453.js.map",
     "static/js/2.65b9b838.chunk.js": "/Moodify-Journal/static/js/2.65b9b838.chunk.js",
@@ -10,9 +10,9 @@
     "static/js/3.a91603d8.chunk.js": "/Moodify-Journal/static/js/3.a91603d8.chunk.js",
     "static/js/3.a91603d8.chunk.js.map": "/Moodify-Journal/static/js/3.a91603d8.chunk.js.map",
     "index.html": "/Moodify-Journal/index.html",
-    "precache-manifest.84d32506fc02be377a5d5cd7ba6784de.js": "/Moodify-Journal/precache-manifest.84d32506fc02be377a5d5cd7ba6784de.js",
+    "precache-manifest.3803390f9406d44ea64c035168856005.js": "/Moodify-Journal/precache-manifest.3803390f9406d44ea64c035168856005.js",
     "service-worker.js": "/Moodify-Journal/service-worker.js",
-    "static/css/main.8bc3ee02.chunk.css.map": "/Moodify-Journal/static/css/main.8bc3ee02.chunk.css.map",
+    "static/css/main.a4efe5f0.chunk.css.map": "/Moodify-Journal/static/css/main.a4efe5f0.chunk.css.map",
     "static/js/2.65b9b838.chunk.js.LICENSE.txt": "/Moodify-Journal/static/js/2.65b9b838.chunk.js.LICENSE.txt",
     "static/media/cat.gif": "/Moodify-Journal/static/media/cat.8909de12.gif",
     "static/media/spongebob-patrick-star.gif": "/Moodify-Journal/static/media/spongebob-patrick-star.9eee1025.gif"
@@ -20,7 +20,7 @@
   "entrypoints": [
     "static/js/runtime-main.244be453.js",
     "static/js/2.65b9b838.chunk.js",
-    "static/css/main.8bc3ee02.chunk.css",
-    "static/js/main.4d9f3543.chunk.js"
+    "static/css/main.a4efe5f0.chunk.css",
+    "static/js/main.f891b579.chunk.js"
   ]
 }
