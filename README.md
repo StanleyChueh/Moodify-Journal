@@ -1,4 +1,4 @@
-# Diary AI
+# Diary AI https://stanleychueh.github.io/Moodify-Journal/
 
 Diary AI is a web application that encourages diary writing by converting daily entries into visual representations, including images and music playlists based on mood. Users can choose between typing, drawing, or using speech-to-text for entries, while mood analysis helps them track emotional trends over time.
 
