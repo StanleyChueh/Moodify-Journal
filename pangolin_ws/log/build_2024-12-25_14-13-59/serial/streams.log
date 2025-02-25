@@ -1,0 +1,35 @@
+[0.006s] Invoking command in '/home/stanley/pangolin_ws/build/serial': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/stanley/pangolin_ws/src/quadruped_robot_4_DOF/pangolin_imu/serial-ros2 -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/stanley/pangolin_ws/install/serial
+[0.042s] -- The C compiler identification is GNU 11.4.0
+[0.080s] -- The CXX compiler identification is GNU 11.4.0
+[0.085s] -- Detecting C compiler ABI info
+[0.134s] -- Detecting C compiler ABI info - done
+[0.138s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.138s] -- Detecting C compile features
+[0.139s] -- Detecting C compile features - done
+[0.141s] -- Detecting CXX compiler ABI info
+[0.194s] -- Detecting CXX compiler ABI info - done
+[0.201s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.201s] -- Detecting CXX compile features
+[0.201s] -- Detecting CXX compile features - done
+[0.203s] -- Found ament_cmake: 1.3.11 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.414s] -- Found Python3: /home/stanley/anaconda3/bin/python3 (found version "3.11.7") found components: Interpreter 
+[0.460s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.505s] Traceback (most recent call last):
+[0.505s]   File "/opt/ros/humble/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 22, in <module>
+[0.505s]     from catkin_pkg.package import parse_package_string
+[0.505s] ModuleNotFoundError: No module named 'catkin_pkg'
+[0.508s] [31mCMake Error at /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:95 (message):
+[0.508s]   execute_process(/home/stanley/anaconda3/bin/python3
+[0.508s]   /opt/ros/humble/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py
+[0.508s]   /home/stanley/pangolin_ws/src/quadruped_robot_4_DOF/pangolin_imu/serial-ros2/package.xml
+[0.508s]   /home/stanley/pangolin_ws/build/serial/ament_cmake_core/package.cmake)
+[0.508s]   returned error code 1
+[0.508s] Call Stack (most recent call first):
+[0.508s]   /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:49 (_ament_package_xml)
+[0.508s]   /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_package.cmake:63 (ament_package_xml)
+[0.508s]   CMakeLists.txt:66 (ament_package)
+[0.508s] 
+[0.508s] [0m
+[0.508s] -- Configuring incomplete, errors occurred!
+[0.508s] See also "/home/stanley/pangolin_ws/build/serial/CMakeFiles/CMakeOutput.log".
+[0.513s] Invoked command in '/home/stanley/pangolin_ws/build/serial' returned '1': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/stanley/pangolin_ws/src/quadruped_robot_4_DOF/pangolin_imu/serial-ros2 -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/stanley/pangolin_ws/install/serial

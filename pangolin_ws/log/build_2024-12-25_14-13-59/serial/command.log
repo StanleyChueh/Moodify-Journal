@@ -1,0 +1,2 @@
+Invoking command in '/home/stanley/pangolin_ws/build/serial': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/stanley/pangolin_ws/src/quadruped_robot_4_DOF/pangolin_imu/serial-ros2 -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/stanley/pangolin_ws/install/serial
+Invoked command in '/home/stanley/pangolin_ws/build/serial' returned '1': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/stanley/pangolin_ws/src/quadruped_robot_4_DOF/pangolin_imu/serial-ros2 -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/stanley/pangolin_ws/install/serial
